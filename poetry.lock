@@ -1,0 +1,21 @@
+[[package]]
+name = "django-tree-queries"
+version = "0.7.0"
+description = "Tree queries with explicit opt-in, without configurability"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+tests = ["coverage"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = ">=3.7,<4.0"
+content-hash = "2bebbcaaa91210756802827746c5e97f32db623690fa5f7e7b3e0dc58fcb935b"
+
+[metadata.files]
+django-tree-queries = [
+    {file = "django_tree_queries-0.7.0-py3-none-any.whl", hash = "sha256:d4583ed97283002349ab615f2a34b4bb8bb467dc0cb8a72d6e0b506b0e6ce483"},
+    {file = "django_tree_queries-0.7.0.tar.gz", hash = "sha256:d2cf6f1d5718ebe606c70ab3ebda0f32ef70f29ec4351893797829c2db499878"},
+]

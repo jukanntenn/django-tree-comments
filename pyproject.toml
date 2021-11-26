@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "django-tree-comments"
+version = "0.0.0"
+description = "A django library for building comments in tree structure."
+authors = ["jukanntenn <jukanntenn@outlook.com>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+repository = "https://github.com/jukanntenn/django-tree-comments"
+keywords = ["django"]
+packages = [
+    { include = "tree_comments" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+django-tree-queries = "^0.7.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
