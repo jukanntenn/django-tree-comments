@@ -5,12 +5,10 @@ from django.utils.translation import gettext_lazy as _
 from tree_queries.models import TreeNode
 
 
-class TreeComment(TreeNode):
+class AbstractTreeComment(TreeNode):
     content = models.TextField(_("content"))
     created_at = models.DateTimeField(_("created at"), default=None)
-    ip_address = models.GenericIPAddressField(
-        _("IP address"), unpack_ipv4=True, blank=True, null=True
-    )
+    ip_address = models.GenericIPAddressField(_("IP address"), unpack_ipv4=True, blank=True, null=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -31,3 +29,8 @@ class TreeComment(TreeNode):
         if self.created_at is None:
             self.created_at = timezone.now()
         super().save(*args, **kwargs)
+
+
+class TreeComment(AbstractTreeComment):
+    class Meta(AbstractTreeComment.Meta):
+        swappable = "TREE_COMMENT_MODEL"
