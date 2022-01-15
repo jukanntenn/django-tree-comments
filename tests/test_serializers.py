@@ -8,6 +8,6 @@ def test_use_default_user_serializer():
 
 
 def test_use_custom_user_serializer(settings):
-    settings.TREE_COMMENTS_USER_SERIALIZER = "tests.default_app.serializers.MyUserSerializer"
+    settings.TREE_COMMENTS_USER_SERIALIZER = "tests.app.serializers.MyUserSerializer"
     importlib.reload(serializers)
     assert serializers.UserSerializer.__name__ == "MyUserSerializer"

@@ -23,6 +23,15 @@ class TreeCommentCreateSerializer(serializers.ModelSerializer):
         ]
 
 
+class TreeCommentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = [
+            "id",
+            "content",
+        ]
+
+
 class DefaultUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel

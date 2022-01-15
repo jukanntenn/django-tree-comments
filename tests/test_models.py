@@ -1,19 +1,24 @@
-from tree_comments.models import TreeComment
+from tests.app.models import SimpleComment
 
 
 class TestTreeComment:
-    def test___str__(self, admin_user):
-        comment = TreeComment(content="test content", user=admin_user)
+    def test___str__(self, admin_user, settings):
+        settings.TREE_COMMENT_MODEL = "tree_comments.TreeComment"
+        comment = SimpleComment(
+            content="test content",
+            user=admin_user,
+        )
         comment.save()
         assert str(comment) == "admin: test content..."
 
-        comment = TreeComment(content="a" * 100, user=admin_user)
+        comment = SimpleComment(content="a" * 100, user=admin_user)
         comment.save()
         truncated = "a" * 50
         assert str(comment) == f"admin: {truncated}..."
 
-    def test_save(self, admin_user):
-        comment = TreeComment(content="test content", user=admin_user)
+    def test_save(self, admin_user, settings):
+        settings.TREE_COMMENT_MODEL = "tree_comments.TreeComment"
+        comment = SimpleComment(content="test content", user=admin_user)
         comment.save()
         assert comment.created_at is not None
-        assert TreeComment.objects.get(pk=comment.pk).created_at is not None
+        assert SimpleComment.objects.get(pk=comment.pk).created_at is not None
