@@ -1,9 +1,12 @@
+from unittest.mock import MagicMock
+
 import pytest
 from django.contrib.auth.models import User
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from tests.app.models import Comment, Post
+from tree_comments import signals
 from tree_comments.serializers import TreeCommentListWithParentUserSerializer
 
 
@@ -76,8 +79,15 @@ class TestTreeCommentCreateUpdateViewSet:
         self.list_url = reverse("comment-list")
         self.detail_url = reverse("comment-detail", kwargs={"pk": self.comment.pk})
 
+        self.mock_comment_edited_receiver = MagicMock()
+        self.mock_comment_posted_receiver = MagicMock()
+        signals.comment_posted.connect(self.mock_comment_posted_receiver)
+        signals.comment_edited.connect(self.mock_comment_edited_receiver)
+
     def teardown_method(self, method):
         self.api_client.force_authenticate(user=None)
+        signals.comment_posted.disconnect(self.mock_comment_posted_receiver)
+        signals.comment_edited.disconnect(self.mock_comment_edited_receiver)
 
     def test_permission(self):
         response = self.api_client.post(self.list_url, data={})
@@ -92,26 +102,31 @@ class TestTreeCommentCreateUpdateViewSet:
             self.list_url, data={"post": self.post.id, "content": "comment content from test create"}
         )
         assert response.status_code == 201
+        self.mock_comment_posted_receiver.assert_called_once()
 
     def test_create_with_invalid_data(self):
         self.api_client.force_authenticate(user=self.user)
         response = self.api_client.post(self.list_url, data={"post": self.post.id})
         assert response.status_code == 400
         assert "content" in response.data
+        self.mock_comment_posted_receiver.assert_not_called()
 
     def test_update(self):
         self.api_client.force_authenticate(user=self.user)
         response = self.api_client.patch(self.detail_url, data={"content": "updated comment content"})
         assert response.status_code == 200
+        self.mock_comment_edited_receiver.assert_called_once()
 
     def test_update_with_invalid_data(self):
         self.api_client.force_authenticate(user=self.user)
         response = self.api_client.patch(self.detail_url, data={"content": ""})
         assert response.status_code == 400
         assert "content" in response.data
+        self.mock_comment_edited_receiver.assert_not_called()
 
     def test_update_nonexistent_comment(self):
         self.api_client.force_authenticate(user=self.user)
         url = reverse("comment-detail", kwargs={"pk": 99999})
         response = self.api_client.patch(url, data={"content": "updated comment content"})
         assert response.status_code == 404
+        self.mock_comment_edited_receiver.assert_not_called()

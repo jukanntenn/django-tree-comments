@@ -1,7 +1,7 @@
 from rest_framework import mixins, pagination, permissions, viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from tree_comments import get_comment_model
+from tree_comments import get_comment_model, signals
 
 from .serializers import (
     TreeCommentCreateSerializer,
@@ -32,7 +32,20 @@ class TreeCommentCreateUpdateViewSet(
         return super().get_serializer_class()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        instance = serializer.save(user=self.request.user)
+        signals.comment_posted.send(
+            sender=instance.__class__,
+            comment=instance,
+            request=self.request,
+        )
+
+    def perform_update(self, serializer):
+        instance = serializer.save(user=self.request.user)
+        signals.comment_edited.send(
+            sender=instance.__class__,
+            comment=instance,
+            request=self.request,
+        )
 
 
 class TreeCommentLimitOffsetPagination(pagination.LimitOffsetPagination):
