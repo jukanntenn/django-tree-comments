@@ -33,4 +33,4 @@ class AbstractTreeComment(TreeNode):
 
 class TreeComment(AbstractTreeComment):
     class Meta(AbstractTreeComment.Meta):
-        swappable = "TREE_COMMENT_MODEL"
+        swappable = "TREE_COMMENTS_COMMENT_MODEL"

@@ -13,7 +13,7 @@ INSTALLED_APPS = [
     "tree_comments",
     "tests.app",
 ]
-TREE_COMMENT_MODEL = "app.Comment"
+TREE_COMMENTS_TREE_COMMENT_MODEL = "app.Comment"
 DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
 }
