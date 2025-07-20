@@ -1,19 +1,12 @@
-from rest_framework_extensions.routers import ExtendedSimpleRouter
+from django.urls import include, path
 
-from tests.app.views import (
-    CommentCreateUpdateViewSet,
-    CommentListNestedViewSet,
-    PostViewSet,
-)
+from tree_comments.feeds import LatestCommentFeed
 
-router = ExtendedSimpleRouter()
-router.register("comments", CommentCreateUpdateViewSet, basename="comment")
-posts_router = router.register("posts", PostViewSet, basename="post")
-posts_router.register(
-    "comments",
-    CommentListNestedViewSet,
-    basename="posts-comment",
-    parents_query_lookups=["post_id"],
-)
+feeds = {
+    "comments": LatestCommentFeed,
+}
 
-urlpatterns = router.get_urls()
+urlpatterns = [
+    path("", include("tree_comments.urls")),
+    path("rss/comments/", LatestCommentFeed()),
+]

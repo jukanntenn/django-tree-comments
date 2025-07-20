@@ -1,0 +1,336 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "title": "Lorem Ipsum",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "created_at": "2025-01-01T00:00:00Z",
+      "enable_comments": true,
+      "author": 1
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 1,
+    "fields": {
+      "parent": null,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Pale-Competition-799",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Certified homo here, you did good <3",
+      "submit_date": "2025-11-05T19:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 2,
+    "fields": {
+      "parent": 1,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Steffeliz2",
+      "user_email": "",
+      "user_url": "",
+      "comment": "CERTIFIED HOMO 🎉😎",
+      "submit_date": "2025-11-05T20:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 3,
+    "fields": {
+      "parent": 2,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "EfficiencyVPickax",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Have I been getting uncertified advice this whole time?!",
+      "submit_date": "2025-11-05T22:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 4,
+    "fields": {
+      "parent": 3,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "travelkcakes",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Omg I need to ask my hair dresser for some documentation",
+      "submit_date": "2025-11-06T01:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 5,
+    "fields": {
+      "parent": 1,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "infiniZii",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Hopefully you had fun during the certification exam.",
+      "submit_date": "2025-11-05T21:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 6,
+    "fields": {
+      "parent": 5,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "J_Kingsley",
+      "user_email": "",
+      "user_url": "",
+      "comment": "I'm afraid i'll need to see a verified copy of your certificate of gayness",
+      "submit_date": "2025-11-05T22:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 7,
+    "fields": {
+      "parent": 6,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "SpiltMilkBelly",
+      "user_email": "",
+      "user_url": "",
+      "comment": "As a fellow certified homo, I'm going to stop these shenanigans right here before this thread becomes Grindr.",
+      "submit_date": "2025-11-06T01:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 8,
+    "fields": {
+      "parent": null,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "aeroeagleAC",
+      "user_email": "",
+      "user_url": "",
+      "comment": "The only opinion that matters here is your sons.",
+      "submit_date": "2025-11-05T19:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 9,
+    "fields": {
+      "parent": 8,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Left_Ad_8502",
+      "user_email": "",
+      "user_url": "",
+      "comment": "I agree. If the daughter is speaking on behalf of the son with information he told her then it would matter, but she's just speaking for him instead.",
+      "submit_date": "2025-11-05T20:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 10,
+    "fields": {
+      "parent": 9,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Hopeful-Put-8823",
+      "user_email": "",
+      "user_url": "",
+      "comment": "i replied the same, she must be one of the types that will fight others battles, even when it doesnt follow their own thoughts etc, ot could have been this once, but i doubt it. The cultural appropriations folks, who get offended for others, that type. Im sure it was a valid concern for herself, but hasnt lived long enough to know that others dont need you to be offended for them haha",
+      "submit_date": "2025-11-05T21:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 11,
+    "fields": {
+      "parent": 10,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "pokeyeahnon",
+      "user_email": "",
+      "user_url": "",
+      "comment": "She was 16 when her mom died. I expect she's very protective of her little brother. I'll give her a pass even if it wasn't the best thing to do.",
+      "submit_date": "2025-11-05T23:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 12,
+    "fields": {
+      "parent": 9,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Idiotic_oliver",
+      "user_email": "",
+      "user_url": "",
+      "comment": "I second this",
+      "submit_date": "2025-11-05T20:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 13,
+    "fields": {
+      "parent": 8,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "MrNormanite",
+      "user_email": "",
+      "user_url": "",
+      "comment": "You're right, I should probably just go right to him and try to figure things out. Appreciate the answer and God bless.",
+      "submit_date": "2025-11-05T21:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 14,
+    "fields": {
+      "parent": 13,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "T-Wrox",
+      "user_email": "",
+      "user_url": "",
+      "comment": "You could also just treat him like you have always treated him, like your son (i.e. nothing has changed :)",
+      "submit_date": "2025-11-05T23:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 15,
+    "fields": {
+      "parent": null,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "heydanalee",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Gay guy here. NTA at all. more dads should be like you.",
+      "submit_date": "2025-11-05T19:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 16,
+    "fields": {
+      "parent": 15,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "MrNormanite",
+      "user_email": "",
+      "user_url": "",
+      "comment": "Thank you brother, that means a lot. God bless.",
+      "submit_date": "2025-11-05T21:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "tree_comments.comment",
+    "pk": 17,
+    "fields": {
+      "parent": 16,
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "user": null,
+      "user_name": "Hopeful-Put-8823",
+      "user_email": "",
+      "user_url": "",
+      "comment": "shit, im 45 my dad turns 70 on NYE. Not once did he ever say he was proud of me, that he loved me, nothing. About 4 years ago, he said he loved me, thats it. I ran into some normal adult shit a few years back, now all i hear is \"1 step closer to being back\" Smh. I mean its never too late to start, but it seemed genuine, and your son can tell the difference. I think you did a killer job handling it. My daughter just turned 6, the best gift i ever recieved from my parents is how not to raise a kid lol. Going strong still, with correcting their errors.",
+      "submit_date": "2025-11-05T22:00:00.000Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  }
+]

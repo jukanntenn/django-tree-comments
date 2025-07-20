@@ -1,0 +1,13 @@
+[project]
+name = "custom"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.7, <4.0"
+dependencies = [
+    "django>=3.2.25",
+    "django-tree-comments",
+]
+
+[tool.uv.sources]
+django-tree-comments = { path = "../../", editable = true }

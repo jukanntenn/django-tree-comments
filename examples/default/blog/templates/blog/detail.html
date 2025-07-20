@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% load tree_comments %}
+{% block title %}
+  {{ post.title }}
+{% endblock title %}
+{% block breadcrumb %}
+  <a href="{% url 'blog-index' %}">Home</a> / {{ post.title }}
+{% endblock breadcrumb %}
+{% block content %}
+  <article>
+    <h1>{{ post.title }}</h1>
+    <div>{{ post.author }} · {{ post.created_at | date:"Y-m-d H:i:s" }}</div>
+    <div>{{ post.body }}</div>
+  </article>
+  {% if post.enable_comments %}
+    {% render_comment_app for post %}
+  {% else %}
+    <p>Comments are disabled for this post.</p>
+  {% endif %}
+{% endblock content %}
