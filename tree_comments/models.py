@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .base import AbstractBaseComment, AbstractCommentFlag
+from .base import AbstractBaseComment
 from .managers import CommentManager
 
 COMMENT_MAX_LENGTH = getattr(settings, "COMMENT_MAX_LENGTH", 3000)
@@ -16,7 +16,7 @@ class AbstractComment(AbstractBaseComment):
     """
 
     parent = models.ForeignKey(
-        "self",
+        getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment"),
         verbose_name=_("parent comment"),
         on_delete=models.CASCADE,
         blank=True,
@@ -188,6 +188,45 @@ class AbstractComment(AbstractBaseComment):
             )
             % d
         )
+
+
+class AbstractCommentFlag(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("user"),
+        related_name="comment_flags",
+        on_delete=models.CASCADE,
+    )
+    comment = models.ForeignKey(
+        getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment"),
+        verbose_name=_("comment"),
+        related_name="flags",
+        on_delete=models.CASCADE,
+    )
+    flag = models.CharField(_("flag"), max_length=30, db_index=True)
+    flag_date = models.DateTimeField(_("date"), default=None)
+
+    SUGGEST_REMOVAL = "removal suggestion"
+    MODERATOR_DELETION = "moderator deletion"
+    MODERATOR_APPROVAL = "moderator approval"
+
+    class Meta:
+        abstract = True
+        unique_together = [("user", "comment", "flag")]
+        verbose_name = _("comment flag")
+        verbose_name_plural = _("comment flags")
+
+    def __str__(self):
+        return "%s flag of comment ID %s by %s" % (
+            self.flag,
+            self.comment_id,
+            self.user.get_username(),
+        )
+
+    def save(self, *args, **kwargs):
+        if self.flag_date is None:
+            self.flag_date = timezone.now()
+        super().save(*args, **kwargs)
 
 
 class Comment(AbstractComment):
