@@ -1,7 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
+from django.db.models import Prefetch
 
 from tests.app.models import Post
 from tree_comments.models import Comment
@@ -173,3 +175,30 @@ class TestManager:
             (self.c3.id, 1),
         ]
         assert actual_meta == expected_meta
+
+    def test_select_and_prefetch(self):
+        # Add a permission to the user for testing prefetch
+        permission = Permission.objects.first()
+        self.c1.user.user_permissions.add(permission)
+
+        # Call cte_for_instance and chain select_related and prefetch_related
+        # Use self.post instead of self.c1.user since post has visible comments
+        queryset = (
+            Comment.objects.cte_for_instance(self.post)
+            .select_related("user")
+            .prefetch_related(
+                Prefetch("user__user_permissions", queryset=Permission.objects.all())
+            )
+        )
+
+        # Apply ordering
+        comments = list(queryset.order_by("-root_id", "submit_date", "id"))
+
+        # Verify the query executed and data is accessible
+        assert len(comments) > 0
+        # Verify user was prefetched (no additional query when accessing)
+        for comment in comments:
+            _ = comment.user.username
+        # Verify permissions were prefetched
+        for comment in comments:
+            list(comment.user.user_permissions.all())

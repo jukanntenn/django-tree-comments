@@ -41,7 +41,7 @@ class CommentManager(models.Manager):
     def roots(self):
         return self.get_queryset().roots()
 
-    def threaded_for_instance(self, instance):
+    def cte_for_instance(self, instance):
         def make_cte(cte):
             base = (
                 self.for_model(instance)
@@ -67,11 +67,10 @@ class CommentManager(models.Manager):
 
         cte = CTE.recursive(make_cte)
 
-        return (
-            with_cte(cte, select=cte.join(self.model, id=cte.col.id))
-            .annotate(
-                root_id=cte.col.root_id,
-                depth=cte.col.depth,
-            )
-            .order_by("-root_id", "submit_date", "id")
+        return with_cte(cte, select=cte.join(self.model, id=cte.col.id)).annotate(
+            root_id=cte.col.root_id,
+            depth=cte.col.depth,
         )
+
+    def threaded_for_instance(self, instance):
+        return self.cte_for_instance(instance).order_by("-root_id", "submit_date", "id")
