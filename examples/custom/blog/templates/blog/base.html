@@ -12,98 +12,97 @@
       | Default Example
     </title>
     <style>
-      :root { --fg:#222; --muted:#666; --bg:#fff; --accent:#0a7; }
+      :root {
+        --fg: #1a1d21;
+        --muted: #4a5568;
+        --hint: #718096;
+        --bg: #fafafa;
+        --bg-alt: #f5f5f5;
+        --accent: #10b981;
+        --accent-hover: #059669;
+        --border: #e0e0e0;
+        --error: #ef4444;
+      }
+
       * { box-sizing: border-box; }
-      html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+      html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, sans-serif; min-height: 100vh; }
       a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      .container { max-width: 840px; margin: 0 auto; padding: 24px; }
-      header { margin-bottom: 24px; }
-      header h1 { font-size: 24px; margin: 0; }
-      nav { margin-top: 8px; color: var(--muted); }
-      main { display:block; }
-      footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; color: var(--muted); font-size: 14px; }
+      a:hover { color: var(--accent-hover); }
+
+      .container { max-width: 800px; margin: 0 auto; padding: 24px 20px; }
+
+      header { padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+      header h1 { font-size: 20px; margin: 0; }
+      header h1 a { color: var(--fg); }
+      nav { margin-top: 6px; color: var(--muted); font-size: 13px; }
+      footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--hint); font-size: 13px; }
+
+      /* 文章列表 - 无卡片背景 */
       .post-list { list-style: none; padding: 0; margin: 0; }
-      .post-item { padding: 12px 0; border-bottom: 1px solid #eee; }
-      .post-item:last-child { border-bottom: 0; }
-      .post-meta { color: var(--muted); font-size: 14px; }
+      .post-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+      .post-item:last-child { border-bottom: none; }
+      .post-meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
 
-      /* --- Tree Comments (custom) --- */
-      .comment-app { margin-top: 24px; }
+      /* 文章 */
+      article { padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+      article h1 { font-size: 24px; margin: 0 0 6px; }
+      article > div:first-of-type { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
 
-      .comment-list { display: grid; gap: 16px; margin-top: 8px; }
-      .comment-item { border: none; border-radius: 0; padding: 0; background: transparent; }
-      .comment-item.child { margin-left: 28px; padding-left: 0; }
+      /* 评论区块 */
+      .comment-app { margin-top: 32px; }
+      .comment-app > h2 { font-size: 18px; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+      .comment-list { display: grid; gap: 12px; margin-top: 16px; }
 
-      .comment-meta { color: var(--muted); font-size: 14px; margin-bottom: 2px; }
-      .comment-meta * { font-size: 14px; }
-      .comment-user-name { font-weight: 600; }
-      .comment-submit-date { color: var(--muted); }
-      .comment-content { white-space: pre-wrap; line-height: 1.7; }
-      .no-comments { color: var(--muted); font-style: italic; }
+      /* 评论 - 扁平化，无背景区分 */
+      .comment-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+      .comment-item:last-child { border-bottom: none; }
+      .comment-item.child { margin-left: 20px; padding-left: 12px; }
+      .comment-meta { color: var(--hint); font-size: 13px; }
+      .comment-user-name { color: var(--fg); font-weight: 600; }
+      .comment-content { margin-top: 6px; white-space: pre-wrap; line-height: 1.6; }
+      .no-comments { color: var(--hint); font-style: italic; font-size: 14px; }
 
+      /* 表单 - 紧凑 */
       .comment-form { margin-top: 16px; }
-      .comment-form p { margin: 0 0 12px 0; }
+      .comment-form p { margin: 0 0 10px; }
       .comment-form p[hidden] { display: none; }
-      .comment-form label { display: block; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
-
-      .comment-form input[type=text],
-      .comment-form input[type=email],
-      .comment-form input[type=url],
-      .comment-form textarea {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background: #fff;
-        outline: none;
-      }
-      .comment-form input:focus,
-      .comment-form textarea:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(10, 170, 119, 0.15);
-      }
-
-      /* Place Name / Email / URL in one line */
-      .comment-form p:has(input[name=name]),
-      .comment-form p:has(input[name=email]),
-      .comment-form p:has(input[name=url]) {
-        display: inline-block;
-        width: calc(33.333% - 10px);
-        vertical-align: top;
-        margin-right: 12px;
-      }
+      .comment-form label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+      /* 必填字段标�� - Name 和 Email */
+      .comment-form p:has(input[name=name]) label::after,
+      .comment-form p:has(input[name=email]) label::after { content: " *"; color: var(--error); font-weight: 600; }
+      /* 选填字段标识 - URL */
+      .comment-form p:has(input[name=url]) label::after { content: " (optional)"; color: var(--hint); font-size: 12px; }
+      .comment-form input[type=text], .comment-form input[type=email], .comment-form input[type=url], .comment-form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 2px; background: #fff; outline: none; font: inherit; font-size: 14px; }
+      .comment-form input:focus, .comment-form textarea:focus { border-color: var(--accent); }
+      .comment-form p:has(input[name=name]), .comment-form p:has(input[name=email]), .comment-form p:has(input[name=url]) { float: left; width: calc(33.333% - 8px); margin-right: 12px; }
       .comment-form p:has(input[name=url]) { margin-right: 0; }
-
-      /* Make comment textarea responsive to container width */
+      .comment-form::after { content: ""; display: table; clear: both; }
       .comment-form p:has(textarea[name=comment]) { display: block; width: 100%; }
+      .comment-form p.error { color: var(--error); font-size: 13px; }
+      /* Django 表单错误列表 */
+      .errorlist { margin: 4px 0 0; padding: 0; list-style: none; color: var(--error); font-size: 12px; }
+      .comment-form p.error input, .comment-form p.error textarea { border-color: var(--error); }
+      .comment-form p.submit { margin-top: 6px; text-align: right; }
 
-      .comment-form p.error { color: #b00020; }
-      .comment-form p.error input,
-      .comment-form p.error textarea { border-color: #b00020; }
+      /* 按钮 - 缩小 */
+      .comment-form .submit-post, .comment-form .submit-preview { background: var(--accent); color: #fff; border: none; padding: 6px 14px; border-radius: 2px; cursor: pointer; font: inherit; font-size: 14px; }
+      .comment-form .submit-post:hover { background: var(--accent-hover); }
+      .comment-form .submit-preview { background: var(--muted); margin-left: 6px; }
+      .comment-form.loading { opacity: 0.6; pointer-events: none; }
 
-      .comment-form p.submit { margin-top: 8px; text-align: right; }
-      .comment-form .submit-post,
-      .comment-form .submit-preview {
-        background: var(--accent);
-        color: #fff;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-      .comment-form .submit-preview { background: #999; margin-left: 8px; }
-      .comment-form .submit-post:hover,
-      .comment-form .submit-preview:hover { opacity: 0.9; }
+      /* 回复表单 */
+      .reply-form-container { margin: 12px 0; padding: 12px; background: var(--bg-alt); border-radius: 2px; }
+      .reply-form-container .comment-form { margin-top: 10px; }
+      .cancel-reply { padding: 5px 12px; background: var(--muted); color: #fff; border: none; border-radius: 2px; cursor: pointer; font-size: 13px; }
+      .form-error { color: var(--error); padding: 10px 12px; background: #fef2f2; border-radius: 2px; margin-bottom: 12px; font-size: 13px; }
+
+      @keyframes highlightComment { 0% { background-color: #ecfdf5; } 100% { background-color: transparent; } }
 
       @media (max-width: 640px) {
-        .comment-form p:has(input[name=name]),
-        .comment-form p:has(input[name=email]),
-        .comment-form p:has(input[name=url]) {
-          display: block;
-          width: 100%;
-          margin-right: 0;
-        }
+        .container { padding: 16px 12px; }
+        .comment-form p:has(input[name=name]), .comment-form p:has(input[name=email]), .comment-form p:has(input[name=url]) { float: none; width: 100%; margin-right: 0; }
+        .comment-item.child { margin-left: 12px; padding-left: 10px; }
+        .reply-form-container { padding: 10px; margin-left: 0; }
       }
     </style>
   </head>

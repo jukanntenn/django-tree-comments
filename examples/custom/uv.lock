@@ -175,19 +175,15 @@ wheels = [
 
 [[package]]
 name = "django-tree-comments"
-version = "0.0.3"
+version = "0.0.4"
 source = { editable = "../../" }
 dependencies = [
     { name = "django-cte", version = "1.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "django-cte", version = "2.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "django-tree-queries" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "django-cte", specifier = ">=1.3.3" },
-    { name = "django-tree-queries", specifier = ">=0.7.0,<0.8" },
-]
+requires-dist = [{ name = "django-cte", specifier = ">=1.3.3" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -195,15 +191,6 @@ dev = [
     { name = "pytest-django", specifier = ">=4.5.2,<5" },
 ]
 lint = [{ name = "djlint", specifier = ">=1.7.4" }]
-
-[[package]]
-name = "django-tree-queries"
-version = "0.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f7/7e/54179f072110d045a9c6a8edf2117c23df1e4a57de57a04563ea8add1614/django_tree_queries-0.7.0.tar.gz", hash = "sha256:d2cf6f1d5718ebe606c70ab3ebda0f32ef70f29ec4351893797829c2db499878", size = 9150, upload-time = "2021-10-31T09:01:00.391Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/90/df/ff1c6b895b51b99776c0ba4d5bfd66acfaac1d7aed50752606bfe0fac840/django_tree_queries-0.7.0-py3-none-any.whl", hash = "sha256:d4583ed97283002349ab615f2a34b4bb8bb467dc0cb8a72d6e0b506b0e6ce483", size = 10923, upload-time = "2021-10-31T09:00:58.839Z" },
-]
 
 [[package]]
 name = "pytz"
