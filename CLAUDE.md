@@ -50,3 +50,4 @@ EXAMPLES are there to illustrate the structure, not to be implemented as-is.
 Frequently used commands:
 
 - `pytest`: Run all unit tests
+- `uv run mkdocs serve -a 127.0.0.1:8001`: Start local documentation server with live reload
