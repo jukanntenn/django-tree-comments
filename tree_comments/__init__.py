@@ -53,3 +53,24 @@ def get_comment_form_target():
     """
     # TODO: Add support for custom comment form target.
     return reverse("tree-comments-post-comment")
+
+
+def get_flag_url(comment):
+    """
+    Get the URL for the "flag this comment" view.
+    """
+    return reverse("tree-comments-flag", args=(comment.id,))
+
+
+def get_delete_url(comment):
+    """
+    Get the URL for the "delete this comment" view.
+    """
+    return reverse("tree-comments-delete", args=(comment.id,))
+
+
+def get_approve_url(comment):
+    """
+    Get the URL for the "approve this comment from moderation" view.
+    """
+    return reverse("tree-comments-approve", args=(comment.id,))
