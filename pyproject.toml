@@ -1,20 +1,75 @@
 [project]
 name = "django-tree-comments"
-version = "0.0.4"
-description = "A django library for building comments in tree structure."
-authors = [{ name = "jukanntenn", email = "jukanntenn@outlook.com" }]
-requires-python = ">=3.7,<4.0"
+version = "0.0.5"
+description = "A Django app for threaded comments using Common Table Expressions (CTE)"
 readme = "README.md"
 license = "BSD-3-Clause"
-keywords = ["django"]
-dependencies = ["django-cte>=1.3.3"]
+license-files = ["LICENSE"]
+requires-python = ">=3.8"
+authors = [
+    { name = "jukanntenn", email = "jukanntenn@outlook.com" }
+]
+maintainers = [
+    { name = "jukanntenn", email = "jukanntenn@outlook.com" }
+]
+keywords = [
+    "django",
+    "comments",
+    "threaded",
+    "tree",
+    "cte",
+    "nested",
+    "replies"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dependencies = [
+    "django>=4.2",
+    "django-cte>=1.3.3",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "pytest-django>=4.5",
+    "pytest-cov>=4.0",
+]
+dev = [
+    "django-tree-comments[test]",
+    "ruff>=0.1.0",
+    "djlint>=1.7.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "pymdown-extensions>=10.0.0",
+]
 
 [project.urls]
+Homepage = "https://github.com/jukanntenn/django-tree-comments"
+Documentation = "https://django-tree-comments.readthedocs.io"
 Repository = "https://github.com/jukanntenn/django-tree-comments"
-
-[dependency-groups]
-dev = ["pytest>=6.2.5,<7", "pytest-django>=4.5.2,<5"]
-lint = ["djlint>=1.7.4"]
+Changelog = "https://github.com/jukanntenn/django-tree-comments/blob/main/CHANGELOG.md"
+Issues = "https://github.com/jukanntenn/django-tree-comments/issues"
 
 [tool.hatch.build.targets.sdist]
 include = ["tree_comments"]
@@ -29,9 +84,22 @@ build-backend = "hatchling.build"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 python_files = "tests.py test_*.py"
+addopts = "-v --tb=short"
 
 [tool.uv.workspace]
 exclude = ["examples/default", "examples/custom"]
 
 [tool.ruff]
 exclude = ["**/migrations/"]
+
+[tool.coverage.run]
+source = ["tree_comments"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
