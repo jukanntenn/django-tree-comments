@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.utils import timezone
 
-from tests.app.models import Post
+from tests.app.models import Article, Post
 from tree_comments.models import Comment
 
 
@@ -46,3 +46,9 @@ def anonymous_comment(site, post):
         user_url="https://example.com",
         comment="anonymous comment",
     )
+
+
+@pytest.fixture
+def article(db):
+    """Create a test article for comments."""
+    return Article.objects.create(title="Test Article")

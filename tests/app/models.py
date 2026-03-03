@@ -23,3 +23,11 @@ class Post(models.Model):
         if not self.created_at:
             self.created_at = timezone.now()
         super().save(*args, **kwargs)
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = "article"
+        verbose_name_plural = "articles"
