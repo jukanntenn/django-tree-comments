@@ -1,0 +1,56 @@
+site_name: Django Tree Comments
+site_description: A Django app for threaded comments using Common Table Expressions (CTE)
+site_author: jukanntenn
+
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+
+repo_url: https://github.com/jukanntenn/django-tree-comments
+repo_name: jukanntenn/django-tree-comments
+edit_uri: edit/main/docs/
+
+nav:
+  - Home: index.md
+  - Quick Start: quickstart.md
+  - Settings: settings.md
+  - Models: models.md
+  - Forms: forms.md
+  - Moderation: moderation.md
+  - Signals: signals.md
+  - Custom Apps: custom.md
+  - Examples: examples.md
+  - API Reference:
+    - Managers: api/managers.md
+    - Views: api/views.md
+  - Migration Guide: migration.md
+  - Architecture: architecture.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jukanntenn/django-tree-comments
