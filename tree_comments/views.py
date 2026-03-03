@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
@@ -519,6 +520,11 @@ class CommentDoneView(TemplateView):
 
 class ReplyView(TemplateView):
     template_name = "tree_comments/reply.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Reply to comment')
+        return context
 
     @inject_comment_target
     def get(self, request, *args, **kwargs):

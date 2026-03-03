@@ -290,3 +290,19 @@ msgstr "張貼你的評論"
 #: templates/comments/preview.html:16
 msgid "or make changes"
 msgstr "或進行變更"
+
+#: tree_comments/models.py
+msgid "parent comment"
+msgstr "父評論"
+
+#: tree_comments/models.py
+msgid "The parent comment being replied to"
+msgstr "被回覆的父評論"
+
+#: tree_comments/forms.py
+msgid "Parent comment"
+msgstr "父評論"
+
+#: tree_comments/views.py
+msgid "Reply to comment"
+msgstr "回覆評論"

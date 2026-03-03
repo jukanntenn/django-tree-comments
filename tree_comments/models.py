@@ -18,6 +18,7 @@ class AbstractComment(AbstractBaseComment):
     parent = models.ForeignKey(
         getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment"),
         verbose_name=_("parent comment"),
+        help_text=_("The parent comment being replied to"),
         on_delete=models.CASCADE,
         blank=True,
         null=True,

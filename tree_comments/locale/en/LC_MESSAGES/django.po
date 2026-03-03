@@ -319,3 +319,19 @@ msgstr "Post your comment"
 #: tree_comments/templates/comments/preview.html:20
 msgid "or make changes"
 msgstr "or make changes"
+
+#: tree_comments/models.py
+msgid "parent comment"
+msgstr "parent comment"
+
+#: tree_comments/models.py
+msgid "The parent comment being replied to"
+msgstr "The parent comment being replied to"
+
+#: tree_comments/forms.py
+msgid "Parent comment"
+msgstr "Parent comment"
+
+#: tree_comments/views.py
+msgid "Reply to comment"
+msgstr "Reply to comment"

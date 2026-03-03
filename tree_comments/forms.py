@@ -111,7 +111,7 @@ class CommentDetailsForm(CommentSecurityForm):
             initial.update({"parent": self.parent.pk})
         super().__init__(target_object, data=data, initial=initial, **kwargs)
 
-    parent = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    parent = forms.IntegerField(required=False, widget=forms.HiddenInput, label=_('Parent comment'))
     name = forms.CharField(label=pgettext_lazy("Person name", "Name"), max_length=50)
     email = forms.EmailField(label=_("Email address"))
     url = forms.URLField(label=_("URL"), required=False, assume_scheme="https")
