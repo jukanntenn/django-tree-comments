@@ -51,7 +51,7 @@ jobs:
       - run: tox -e ${{ matrix.tox-env }}
         env:
           PYTEST_ADDOPTS: "--no-reuse-db"
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v7
         if: matrix.python-version == '3.13'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
