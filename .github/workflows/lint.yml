@@ -8,6 +8,7 @@ on:
       - 'pyproject.toml'
       - 'prek.toml'
       - '.editorconfig'
+      - '.github/workflows/**'
   pull_request:
     paths:
       - '**.py'
@@ -15,6 +16,7 @@ on:
       - 'pyproject.toml'
       - 'prek.toml'
       - '.editorconfig'
+      - '.github/workflows/**'
 
 concurrency:
   group: lint-${{ github.ref }}
