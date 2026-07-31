@@ -1,12 +1,19 @@
-from django.core.management.base import BaseCommand
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, cast
+
+from django.core.management.base import BaseCommand, CommandParser
 
 import tree_comments
+
+if TYPE_CHECKING:
+    from tree_comments.base import AbstractBaseComment
 
 
 class Command(BaseCommand):
     help = "Remove comments for which the related objects don't exist anymore!"
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument(
             "-y",
             "--yes",
@@ -17,20 +24,21 @@ class Command(BaseCommand):
             help="Automatically confirm deletion",
         )
 
-    def handle(self, *args, **kwargs):
-        verbose = kwargs["verbosity"] >= 1
-        answer = kwargs["answer"]
+    def handle(self, *args: Any, **options: Any) -> None:
+        verbose = options["verbosity"] >= 1
+        answer = options["answer"]
 
         # -v0 sets --yes
         if not verbose:
             answer = "y"
 
-        for comment in tree_comments.get_comment_model().objects.all():
+        comment_model = cast("type[AbstractBaseComment]", tree_comments.get_comment_model())
+        for comment in comment_model._default_manager.all():
             if comment.content_object is None:
                 if verbose:
                     self.stdout.write(
-                        "Comment `%s' to non-existing `%s' with PK `%s'"
-                        % (comment, comment.content_type.model, comment.object_pk)
+                        f"Comment `{comment}' to non-existing "
+                        f"`{comment.content_type.model}' with PK `{comment.object_pk}'"
                     )
 
                 while answer not in "yn":
@@ -44,4 +52,4 @@ class Command(BaseCommand):
                     comment.delete()
 
                     if verbose:
-                        self.stdout.write("Deleted comment `%s'" % comment)
+                        self.stdout.write(f"Deleted comment `{comment}'")

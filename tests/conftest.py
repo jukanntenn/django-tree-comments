@@ -1,12 +1,10 @@
 from datetime import timedelta
 
 import pytest
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.utils import timezone
 
-from tests.app.models import Article, Post
-from tree_comments.models import Comment
+from tests.factories import CommentFactory, PostFactory
 
 
 @pytest.fixture
@@ -16,7 +14,7 @@ def site():
 
 @pytest.fixture
 def post(admin_user):
-    return Post.objects.create(
+    return PostFactory(
         title="test post",
         author=admin_user,
         enable_comments=True,
@@ -26,9 +24,8 @@ def post(admin_user):
 
 @pytest.fixture
 def comment(site, post, admin_user):
-    return Comment.objects.create(
-        content_type=ContentType.objects.get_for_model(Post),
-        object_pk=post.pk,
+    return CommentFactory(
+        target_object=post,
         site=site,
         user=admin_user,
         comment="test comment",
@@ -37,18 +34,12 @@ def comment(site, post, admin_user):
 
 @pytest.fixture
 def anonymous_comment(site, post):
-    return Comment.objects.create(
-        content_type=ContentType.objects.get_for_model(Post),
-        object_pk=post.pk,
+    return CommentFactory(
+        target_object=post,
         site=site,
+        user=None,
         user_name="anonymous",
         user_email="anonymous@example.com",
         user_url="https://example.com",
         comment="anonymous comment",
     )
-
-
-@pytest.fixture
-def article(db):
-    """Create a test article for comments."""
-    return Article.objects.create(title="Test Article")

@@ -3,10 +3,9 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
 from tests.app.models import Post
-from tree_comments import signals
+from tree_comments import get_comment_flag_model, get_comment_model, signals
 from tree_comments.forms import CommentForm
 from tree_comments.models import COMMENT_MAX_LENGTH, Comment
-from tree_comments import get_comment_flag_model, get_comment_model
 
 
 @pytest.mark.django_db
@@ -47,9 +46,7 @@ class TestCommentViews:
 
     def test_post_comment_bad_ctype_injection_attempt(self, client, post):
         data = self.get_valid_data(post)
-        data["content_type"] = (
-            str(Post._meta) + "'\"()&%<acx><ScRiPt >prompt(998230)</ScRiPt>"
-        )
+        data["content_type"] = str(Post._meta) + "'\"()&%<acx><ScRiPt >prompt(998230)</ScRiPt>"
         response = client.post("/post/", data)
         assert response.status_code == 400
 
@@ -85,10 +82,7 @@ class TestCommentViews:
         data = self.get_valid_data(post)
         data["comment"] = "X" * (COMMENT_MAX_LENGTH + 1)
         response = client.post("/post/", data)
-        assert (
-            "Ensure this value has at most %d characters" % COMMENT_MAX_LENGTH
-            in response.content.decode()
-        )
+        assert "Ensure this value has at most %d characters" % COMMENT_MAX_LENGTH in response.content.decode()
 
     def test_comment_preview(self, client, post):
         data = self.get_valid_data(post)
@@ -142,9 +136,7 @@ class TestCommentViews:
         settings.DEBUG = False
         response = client.post("/post/", data)
         assert response.status_code == 400
-        assert "tree_comments/400-debug.html" not in [
-            t.name for t in response.templates
-        ]
+        assert "tree_comments/400-debug.html" not in [t.name for t in response.templates]
 
         settings.DEBUG = olddebug
 
@@ -206,9 +198,7 @@ class TestCommentViews:
         assert c.user_name == "admin"
         assert c.user_email == admin_user.email
 
-    def test_post_as_authenticated_user_without_fullname(
-        self, client, post, django_user_model
-    ):
+    def test_post_as_authenticated_user_without_fullname(self, client, post, django_user_model):
         """
         Check that the user's name in the comment is populated for
         authenticated users without first_name and last_name.
@@ -358,9 +348,7 @@ class TestCommentViews:
         data["next"] = "/somewhere/else/?foo=bar#baz"
         data["comment"] = "This is another comment"
         response = client.post("/post/", data)
-        expected_url = (
-            "/somewhere/else/?foo=bar&c=%s#baz" % Comment.objects.latest("id").pk
-        )
+        expected_url = "/somewhere/else/?foo=bar&c=%s#baz" % Comment.objects.latest("id").pk
         assert response.status_code == 302
         assert response.url == expected_url
 
@@ -408,9 +396,7 @@ class TestCommentFormTemplateView:
         assert data["content_type"] == str(Post._meta)
         assert data["object_pk"] == str(post.pk)
         assert str(data["timestamp"]).isdigit()
-        assert (
-            isinstance(data["security_hash"], str) and len(data["security_hash"]) == 40
-        )
+        assert isinstance(data["security_hash"], str) and len(data["security_hash"]) == 40
 
     def test_form_missing_params(self, client):
         response = client.get("/form/")
@@ -506,9 +492,7 @@ class TestCommentModerationViews:
         response = client.post(f"/flag/{comment.pk}/")
         assert response.status_code == 302
         assert response.url == f"/flagged/?c={comment.pk}"
-        assert flag_model.objects.filter(
-            comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL
-        ).count() == 1
+        assert flag_model.objects.filter(comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL).count() == 1
         assert received == [signals.comment_was_flagged]
         signals.comment_was_flagged.disconnect(dispatch_uid="flag-test")
 
@@ -517,9 +501,7 @@ class TestCommentModerationViews:
         flag_model = get_comment_flag_model()
         client.post(f"/flag/{comment.pk}/")
         client.post(f"/flag/{comment.pk}/")
-        assert flag_model.objects.filter(
-            comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL
-        ).count() == 1
+        assert flag_model.objects.filter(comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL).count() == 1
 
     def test_flag_post_safe_next(self, client, comment, admin_user):
         client.force_login(admin_user)
@@ -529,9 +511,7 @@ class TestCommentModerationViews:
 
     def test_flag_post_unsafe_next(self, client, comment, admin_user):
         client.force_login(admin_user)
-        response = client.post(
-            f"/flag/{comment.pk}/", data={"next": "http://elsewhere/bad"}
-        )
+        response = client.post(f"/flag/{comment.pk}/", data={"next": "http://elsewhere/bad"})
         assert response.status_code == 302
         assert response.url == f"/flagged/?c={comment.pk}"
 
@@ -544,9 +524,7 @@ class TestCommentModerationViews:
         response = client.get(f"/delete/{comment.pk}/")
         assert response.status_code == 302
 
-        normal = django_user_model.objects.create_user(
-            username="normal", email="normal@example.com", password="normal"
-        )
+        normal = django_user_model.objects.create_user(username="normal", email="normal@example.com", password="normal")
         client.force_login(normal)
         response = client.get(f"/delete/{comment.pk}/")
         assert response.status_code == 403
@@ -568,9 +546,9 @@ class TestCommentModerationViews:
 
         comment.refresh_from_db()
         assert comment.is_removed is True
-        assert flag_model.objects.filter(
-            comment=comment, user=moderator, flag=flag_model.MODERATOR_DELETION
-        ).count() == 1
+        assert (
+            flag_model.objects.filter(comment=comment, user=moderator, flag=flag_model.MODERATOR_DELETION).count() == 1
+        )
 
     def test_delete_done_view(self, client, comment):
         response = client.get("/deleted/", data={"c": comment.pk})
@@ -610,9 +588,9 @@ class TestCommentModerationViews:
         comment.refresh_from_db()
         assert comment.is_removed is False
         assert comment.is_public is True
-        assert flag_model.objects.filter(
-            comment=comment, user=moderator, flag=flag_model.MODERATOR_APPROVAL
-        ).count() == 1
+        assert (
+            flag_model.objects.filter(comment=comment, user=moderator, flag=flag_model.MODERATOR_APPROVAL).count() == 1
+        )
 
     def test_approve_done_view(self, client, comment):
         response = client.get("/approved/", data={"c": comment.pk})

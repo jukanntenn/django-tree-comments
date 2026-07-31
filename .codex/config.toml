@@ -1,0 +1,10 @@
+[hooks.PostToolUse]
+matcher = "Edit|Write"
+hooks = [
+  { type = "command", command = "uv run python .claude/hooks/format_on_edit.py" }
+]
+
+[hooks.Stop]
+hooks = [
+  { type = "command", command = "uv run python .claude/hooks/lint_gate.py" }
+]

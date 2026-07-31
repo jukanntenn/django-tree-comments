@@ -56,7 +56,7 @@ Display threaded comments with parent-child relationships:
 ```django
 {% get_comment_list for object as comment_list %}
 {% for comment in comment_list %}
-    <div class="comment" style="margin-left: {{ comment.level }}em;">
+    <div class="comment" style="margin-left: {{ comment.depth }}em;">
         {{ comment.comment }}
         <a href="{{ comment.get_reply_url }}">Reply</a>
     </div>
@@ -71,9 +71,7 @@ Get comments as JSON for AJAX:
 import requests
 
 response = requests.get(
-    '/comments/form/',
-    headers={'Accept': 'application/json'},
-    params={'content_type': 'blog.article', 'object_id': 1}
+    "/comments/form/", headers={"Accept": "application/json"}, params={"content_type": "blog.article", "object_id": 1}
 )
 data = response.json()
 ```

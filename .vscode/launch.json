@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Django: runserver (examples/default)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/examples/default/manage.py",
+      "args": ["runserver", "--noreload", "127.0.0.1:8000"],
+      "django": true,
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}/examples/default"
+    },
+    {
+      "name": "pytest (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-v", "--no-header", "--reuse-db"],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": { "DJANGO_SETTINGS_MODULE": "tests.settings" }
+    }
+  ]
+}

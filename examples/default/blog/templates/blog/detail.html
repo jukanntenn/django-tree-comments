@@ -1,20 +1,23 @@
 {% extends "blog/base.html" %}
-{% load tree_comments %}
-{% block title %}
-  {{ post.title }}
-{% endblock title %}
-{% block breadcrumb %}
-  <a href="{% url 'blog-index' %}">Home</a> / {{ post.title }}
-{% endblock breadcrumb %}
+{% load tree_comments blog_tags i18n %}
+{% block title %}{{ post.title }}{% endblock %}
 {% block content %}
-  <article>
-    <h1>{{ post.title }}</h1>
-    <div>{{ post.author }} · {{ post.created_at | date:"Y-m-d H:i:s" }}</div>
-    <div>{{ post.body }}</div>
-  </article>
-  {% if post.enable_comments %}
-    {% render_comment_app for post %}
-  {% else %}
-    <p>Comments are disabled for this post.</p>
-  {% endif %}
-{% endblock content %}
+    <article class="post">
+        <h1>{{ post.title }}</h1>
+        <div class="post-meta">
+            <span>{{ post.author|default:"anonymous" }}</span>
+            <span>{{ post.created_at|date:"Y-m-d H:i" }}</span>
+        </div>
+        <div class="post-body">{{ post.body|linebreaksbr }}</div>
+    </article>
+    {% if post.enable_comments %}
+        <section class="comments-section">
+            {% get_comment_form for post as form %}
+            {% with nested=post|build_nested_for_post %}
+                {% include "tree_comments/app.html" %}
+            {% endwith %}
+        </section>
+    {% else %}
+        <p class="comments-disabled">Comments are disabled for this post.</p>
+    {% endif %}
+{% endblock %}

@@ -17,9 +17,11 @@ Sent before a comment is saved to the database.
 ```python
 from tree_comments.signals import comment_will_be_posted
 
+
 def validate_comment(sender, comment, request, **kwargs):
-    if 'spam' in comment.comment.lower():
+    if "spam" in comment.comment.lower():
         raise ValidationError("Spam detected!")
+
 
 comment_will_be_posted.connect(validate_comment)
 ```
@@ -37,9 +39,11 @@ Sent after a comment is successfully saved.
 ```python
 from tree_comments.signals import comment_was_posted
 
+
 def notify_author(sender, comment, request, **kwargs):
     # Send email notification
     send_notification_email(comment)
+
 
 comment_was_posted.connect(notify_author)
 ```
@@ -59,9 +63,11 @@ Sent when a comment is flagged.
 ```python
 from tree_comments.signals import comment_was_flagged
 
+
 def notify_moderator(sender, comment, flag, created, request, **kwargs):
     if created:
         send_moderator_notification(comment, flag)
+
 
 comment_was_flagged.connect(notify_moderator)
 ```

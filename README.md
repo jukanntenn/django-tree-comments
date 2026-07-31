@@ -1,23 +1,103 @@
 # django-tree-comments
 
-A django library for building comments in tree structure.
+A Django app for threaded (nested) comments using Common Table Expressions
+(CTE), ported and extended from
+[django-contrib-comments](https://github.com/django/django-contrib-comments).
 
-> This library is under heavy development. v0.0.0 is a placeholder version which actually contains nothing. Version numbers of the library follow [SemVer](https://semver.org/). However, to avoid version numbers grow too fast, at the experimental stage the library will be released under version number with format 0.0.x that SemVer rules do not apply.
+> This library is under active development. Version numbers follow the `0.0.x`
+> scheme during the experimental stage; SemVer rules will apply once `1.0.0` is
+> reached.
 
 ## Features
 
-- Query comments as a tree structure efficiently thanks to [django-tree-queries](https://github.com/matthiask/django-tree-queries).
-- No generic relationships, no additional fields needed so that make comment model pure and clean.
-- Provide forms, serializers, utilities and everything you need to help building a complete comment app for your django project.
+- **Threaded comments** — a self-referential `parent` foreign key models the
+  reply tree (adjacency list, zero redundant tree columns).
+- **CTE tree queries** — recursive Common Table Expressions fetch an entire
+  comment tree in a single query, with `depth` and `root_id` annotations.
+- **Multi-backend** — works on PostgreSQL, MySQL, and SQLite.
+- **Swappable models & forms** — customize `Comment`, `CommentFlag`, and the
+  form class via `TREE_COMMENTS_COMMENT_MODEL`,
+  `TREE_COMMENTS_COMMENT_FLAG_MODEL`, and `TREE_COMMENTS_COMMENT_FORM`.
+- **Class-based views with JSON / HTML-fragment responses** — friendly to
+  AJAX and HTMX-style partial rendering.
+- **Moderation, flagging, RSS feeds, Django admin integration** — full feature
+  parity with django-contrib-comments.
+- **Internationalization** — ships `.po` catalogs for 70+ languages.
 
-## Limitations
+## Requirements
 
-Since the core feature for tree structure comments is based on the implementation of [django-tree-queries](https://github.com/matthiask/django-tree-queries), so this library extends the same limitations from that.
+- Python 3.10+
+- Django 5.2+
+- [django-cte](https://github.com/dimagi/django-cte)
 
-## Usage
+## Installation
 
-Available soon...
+```bash
+pip install django-tree-comments
+```
 
-## Example project
+Add `tree_comments` and `django.contrib.sites` to your `INSTALLED_APPS`:
 
-Available soon...
+```python
+INSTALLED_APPS = [
+    ...
+    "django.contrib.sites",
+    "tree_comments",
+]
+```
+
+Run the migrations:
+
+```bash
+python manage.py migrate
+```
+
+## Quick start
+
+Render a whole threaded comment app (list + reply form) for any object with a
+single template tag:
+
+```django
+{% load tree_comments %}
+
+{% render_comment_app for article %}
+```
+
+Each comment in the tree carries an annotated `depth` (and `root_id`), so
+templates can indent replies without extra queries:
+
+```django
+<div class="comment{% if comment.depth %} is-child{% endif %}">
+    {{ comment.comment }}
+    <a href="{{ comment.get_reply_url }}">Reply</a>
+</div>
+```
+
+See the [Quick Start guide](https://django-tree-comments.readthedocs.io) for the
+full walkthrough.
+
+## Example projects
+
+Two runnable example projects live under [`examples/`](examples):
+
+- [`examples/default`](examples/default) — the default `tree_comments.Comment`
+  model.
+- [`examples/custom`](examples/custom) — a custom swappable comment model and
+  templates.
+
+## Documentation
+
+Full documentation is at
+[django-tree-comments.readthedocs.io](https://django-tree-comments.readthedocs.io),
+including:
+
+- [Settings](https://django-tree-comments.readthedocs.io) — configuration
+  options (`TREE_COMMENTS_*` settings).
+- [Models](https://django-tree-comments.readthedocs.io) — the `parent` field,
+  CTE query methods (`cte_for_instance`, `threaded_for_instance`).
+- [Custom apps](https://django-tree-comments.readthedocs.io) — swappable models
+  & forms.
+
+## License
+
+BSD-3-Clause, see [LICENSE](LICENSE).

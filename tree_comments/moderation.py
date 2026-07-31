@@ -54,7 +54,10 @@ class.
 
 """
 
+from __future__ import annotations
+
 import datetime
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -67,25 +70,27 @@ from django.utils.translation import gettext as _
 import tree_comments
 from tree_comments import signals
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
-class AlreadyModerated(Exception):
+    from django.db.models import Model
+    from django.http import HttpRequest
+
+
+class AlreadyModerated(Exception):  # noqa: N818
     """
     Raised when a model which is already registered for moderation is
     attempting to be registered again.
 
     """
 
-    pass
 
-
-class NotModerated(Exception):
+class NotModerated(Exception):  # noqa: N818
     """
     Raised when a model which is not registered for moderation is
     attempting to be unregistered.
 
     """
-
-    pass
 
 
 class CommentModerator:
@@ -172,17 +177,17 @@ class CommentModerator:
 
     """
 
-    auto_close_field = None
-    auto_moderate_field = None
-    close_after = None
-    email_notification = False
-    enable_field = None
-    moderate_after = None
+    auto_close_field: str | None = None
+    auto_moderate_field: str | None = None
+    close_after: int | None = None
+    email_notification: bool = False
+    enable_field: str | None = None
+    moderate_after: int | None = None
 
-    def __init__(self, model):
+    def __init__(self, model: type[Model]) -> None:
         self._model = model
 
-    def _get_delta(self, now, then):
+    def _get_delta(self, now: datetime.date, then: datetime.date) -> datetime.timedelta:
         """
         Internal helper which will return a ``datetime.timedelta``
         representing the time between ``now`` and ``then``. Assumes
@@ -199,12 +204,10 @@ class CommentModerator:
             now = datetime.date(now.year, now.month, now.day)
             then = datetime.date(then.year, then.month, then.day)
         if now < then:
-            raise ValueError(
-                "Cannot determine moderation rules because date field is set to a value in the future"
-            )
+            raise ValueError("Cannot determine moderation rules because date field is set to a value in the future")
         return now - then
 
-    def allow(self, comment, content_object, request):
+    def allow(self, comment: Model, content_object: Model, request: HttpRequest) -> bool:
         """
         Determine whether a given comment is allowed to be posted on
         a given object.
@@ -213,20 +216,18 @@ class CommentModerator:
         otherwise.
 
         """
-        if self.enable_field:
-            if not getattr(content_object, self.enable_field):
-                return False
+        if self.enable_field and not getattr(content_object, self.enable_field):
+            return False
         if self.auto_close_field and self.close_after is not None:
             close_after_date = getattr(content_object, self.auto_close_field)
             if (
                 close_after_date is not None
-                and self._get_delta(timezone.now(), close_after_date).days
-                >= self.close_after
+                and self._get_delta(timezone.now(), close_after_date).days >= self.close_after
             ):
                 return False
         return True
 
-    def moderate(self, comment, content_object, request):
+    def moderate(self, comment: Model, content_object: Model, request: HttpRequest) -> bool:
         """
         Determine whether a given comment on a given object should be
         allowed to show up immediately, or should be marked non-public
@@ -240,13 +241,12 @@ class CommentModerator:
             moderate_after_date = getattr(content_object, self.auto_moderate_field)
             if (
                 moderate_after_date is not None
-                and self._get_delta(timezone.now(), moderate_after_date).days
-                >= self.moderate_after
+                and self._get_delta(timezone.now(), moderate_after_date).days >= self.moderate_after
             ):
                 return True
         return False
 
-    def email(self, comment, content_object, request):
+    def email(self, comment: Model, content_object: Model, request: HttpRequest) -> None:
         """
         Send email notification of a new comment to site staff when email
         notifications have been requested.
@@ -306,24 +306,24 @@ class Moderator:
 
     """
 
-    def __init__(self):
-        self._registry = {}
+    def __init__(self) -> None:
+        self._registry: dict[type[Model], CommentModerator] = {}
         self.connect()
 
-    def connect(self):
+    def connect(self) -> None:
         """
         Hook up the moderation methods to pre- and post-save signals
         from the comment models.
 
         """
-        signals.comment_will_be_posted.connect(
-            self.pre_save_moderation, sender=tree_comments.get_comment_model()
-        )
-        signals.comment_was_posted.connect(
-            self.post_save_moderation, sender=tree_comments.get_comment_model()
-        )
+        signals.comment_will_be_posted.connect(self.pre_save_moderation, sender=tree_comments.get_comment_model())
+        signals.comment_was_posted.connect(self.post_save_moderation, sender=tree_comments.get_comment_model())
 
-    def register(self, model_or_iterable, moderation_class):
+    def register(
+        self,
+        model_or_iterable: type[Model] | Iterable[type[Model]],
+        moderation_class: type[CommentModerator],
+    ) -> None:
         """
         Register a model or a list of models for comment moderation,
         using a particular moderation class.
@@ -336,12 +336,10 @@ class Moderator:
             model_or_iterable = [model_or_iterable]
         for model in model_or_iterable:
             if model in self._registry:
-                raise AlreadyModerated(
-                    "The model '%s' is already being moderated" % model._meta.model_name
-                )
+                raise AlreadyModerated(f"The model '{model._meta.model_name}' is already being moderated")
             self._registry[model] = moderation_class(model)
 
-    def unregister(self, model_or_iterable):
+    def unregister(self, model_or_iterable: type[Model] | Iterable[type[Model]]) -> None:
         """
         Remove a model or a list of models from the list of models
         whose comments will be moderated.
@@ -354,13 +352,12 @@ class Moderator:
             model_or_iterable = [model_or_iterable]
         for model in model_or_iterable:
             if model not in self._registry:
-                raise NotModerated(
-                    "The model '%s' is not currently being moderated"
-                    % model._meta.model_name
-                )
+                raise NotModerated(f"The model '{model._meta.model_name}' is not currently being moderated")
             del self._registry[model]
 
-    def pre_save_moderation(self, sender, comment, request, **kwargs):
+    def pre_save_moderation(
+        self, sender: type[Model], comment: Any, request: HttpRequest, **kwargs: Any
+    ) -> bool | None:
         """
         Apply any necessary pre-save moderation steps to new
         comments.
@@ -368,7 +365,7 @@ class Moderator:
         """
         model = comment.content_type.model_class()
         if model not in self._registry:
-            return
+            return None
         content_object = comment.content_object
         moderation_class = self._registry[model]
 
@@ -378,8 +375,9 @@ class Moderator:
 
         if moderation_class.moderate(comment, content_object, request):
             comment.is_public = False
+        return None
 
-    def post_save_moderation(self, sender, comment, request, **kwargs):
+    def post_save_moderation(self, sender: type[Model], comment: Any, request: HttpRequest, **kwargs: Any) -> None:
         """
         Apply any necessary post-save moderation steps to new
         comments.

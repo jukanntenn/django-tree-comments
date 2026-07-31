@@ -29,10 +29,8 @@ class AbstractBaseComment(models.Model):
         abstract = True
 
     # TODO: test
-    def get_content_object_url(self):
+    def get_content_object_url(self) -> str:
         """
         Get a URL suitable for redirecting to the content object.
         """
-        return reverse(
-            "tree-comments-url-redirect", args=(self.content_type_id, self.object_pk)
-        )
+        return reverse("tree-comments-url-redirect", args=(self.content_type_id, self.object_pk))

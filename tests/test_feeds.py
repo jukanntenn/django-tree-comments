@@ -15,9 +15,7 @@ class TestFeeds:
     def test_feed(self, client, post):
         """Test RSS feed generation and content."""
 
-        site_2 = Site.objects.create(
-            id=settings.SITE_ID + 1, domain="example2.com", name="example2.com"
-        )
+        site_2 = Site.objects.create(id=settings.SITE_ID + 1, domain="example2.com", name="example2.com")
         # A comment for another site
         Comment.objects.create(
             content_type=ContentType.objects.get_for_model(post),

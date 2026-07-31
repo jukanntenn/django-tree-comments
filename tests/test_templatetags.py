@@ -19,7 +19,11 @@ User = get_user_model()
 class TestTemplateTags:
     def create_some_comments(self):
         site = Site.objects.get_current()
-        user = User.objects.create_user(username="alice")
+        # Use get_or_create for idempotency: the _from_literal test variants create a row once
+        # before invoking the render method under test (to obtain a real pk), and the method under
+        # test creates another internally. Idempotency makes repeated calls return the same objects,
+        # avoiding unique-constraint violations (especially important on PG/MySQL).
+        user, _ = User.objects.get_or_create(username="alice")
         post = Post.objects.create(title="test post", author=user)
 
         post_ctype = ContentType.objects.get_for_model(Post)
@@ -61,18 +65,14 @@ class TestTemplateTags:
 
     def test_get_comment_form(self, post, tag=None):
         """Test get_comment_form tag."""
-        t = "{% load tree_comments %}" + (
-            tag or "{% get_comment_form for app.post p.id as form %}"
-        )
+        t = "{% load tree_comments %}" + (tag or "{% get_comment_form for app.post p.id as form %}")
         ctx, out = self.render(t, p=post)
         assert out == ""
         assert isinstance(ctx["form"], CommentForm)
 
     def test_get_comment_form_from_literal(self, post):
         """Test get_comment_form tag with literal object."""
-        self.test_get_comment_form(
-            post, tag="{% get_comment_form for app.post 1 as form %}"
-        )
+        self.test_get_comment_form(post, tag=f"{{% get_comment_form for app.post {post.pk} as form %}}")
 
     def test_get_comment_form_from_object(self, post):
         """Test get_comment_form tag with object instance."""
@@ -87,9 +87,7 @@ class TestTemplateTags:
 
     def test_render_comment_form(self, post, tag=None):
         """Test render_comment_form tag."""
-        t = "{% load tree_comments %}" + (
-            tag or "{% render_comment_form for app.post p.id %}"
-        )
+        t = "{% load tree_comments %}" + (tag or "{% render_comment_form for app.post p.id %}")
 
         ctx, out = self.render(t, p=post)
         assert out.strip().startswith("<form action=")
@@ -97,9 +95,7 @@ class TestTemplateTags:
 
     def test_render_comment_form_from_literal(self, post):
         """Test render_comment_form tag with literal object."""
-        self.test_render_comment_form(
-            post, tag="{% render_comment_form for app.post 1 %}"
-        )
+        self.test_render_comment_form(post, tag=f"{{% render_comment_form for app.post {post.pk} %}}")
 
     def test_render_comment_form_from_object(self, post):
         """Test render_comment_form tag with object instance."""
@@ -112,20 +108,15 @@ class TestTemplateTags:
             tag="{% load comment_testtags %}{% render_comment_form for p|noop:'x y' %}",
         )
 
-    def test_render_comment_form_from_object_with_query_count(
-        self, django_assert_num_queries, post
-    ):
+    def test_render_comment_form_from_object_with_query_count(self, django_assert_num_queries, post):
         """Test render_comment_form with query counting."""
         with django_assert_num_queries(0):
             self.test_render_comment_form_from_object(post)
 
     def verify_get_comment_count(self, tag=None):
         """Helper method to verify comment count functionality."""
-        t = (
-            "{% load tree_comments %}"
-            + (tag or "{% get_comment_count for app.post p.id as cc %}")
-            + "{{ cc }}"
-        )
+        t = "{% load tree_comments %}" + (tag or "{% get_comment_count for app.post p.id as cc %}") + "{{ cc }}"
+        t = t.replace("<<PK>>", str(self.post.pk))
         ctx, out = self.render(t, p=self.post)
         assert out == "2"
 
@@ -137,7 +128,7 @@ class TestTemplateTags:
     def test_get_comment_count_from_literal(self):
         """Test get_comment_count tag with literal object."""
         self.create_some_comments()
-        self.verify_get_comment_count("{% get_comment_count for app.post 1 as cc %}")
+        self.verify_get_comment_count("{% get_comment_count for app.post <<PK>> as cc %}")
 
     def test_get_comment_count_from_object(self):
         """Test get_comment_count tag with object instance."""
@@ -147,16 +138,12 @@ class TestTemplateTags:
     def test_whitespace_in_get_comment_count_tag(self):
         """Test get_comment_count tag with whitespace handling."""
         self.create_some_comments()
-        self.verify_get_comment_count(
-            "{% load comment_testtags %}{% get_comment_count for p|noop:'x y' as cc %}"
-        )
+        self.verify_get_comment_count("{% load comment_testtags %}{% get_comment_count for p|noop:'x y' as cc %}")
 
     def verify_get_comment_list(self, tag=None):
         """Helper method to verify comment list functionality."""
         Comment.objects.all()[:4]
-        t = "{% load tree_comments %}" + (
-            tag or "{% get_comment_list for app.post p.id as cl %}"
-        )
+        t = "{% load tree_comments %}" + (tag or "{% get_comment_list for app.post p.id as cl %}")
         ctx, out = self.render(t, p=self.post)
         assert out == ""
         assert list(ctx["cl"]) == [self.c1, self.c2]
@@ -178,9 +165,7 @@ class TestTemplateTags:
 
     def test_get_comment_list_using_request(self, tag=None):
         """Test get_comment_list tag using request object."""
-        site_2 = Site.objects.create(
-            id=settings.SITE_ID + 1, domain="testserver", name="testserver"
-        )
+        site_2 = Site.objects.create(id=settings.SITE_ID + 1, domain="testserver", name="testserver")
         # A request lookup should return site_2
         with override_settings(SITE_ID=site_2.id):
             self.create_some_comments()
@@ -188,9 +173,7 @@ class TestTemplateTags:
         # Effectively unset SITE_ID which forces a site lookup from the
         # request. Create a new comment for the second site.
         with override_settings(SITE_ID=None):
-            t = "{% load tree_comments %}" + (
-                tag or "{% get_comment_list for app.post p.id as cl %}"
-            )
+            t = "{% load tree_comments %}" + (tag or "{% get_comment_list for app.post p.id as cl %}")
             request = RequestFactory().get("/")
             ctx, out = self.render(t, p=self.post, request=request)
             assert list(ctx["cl"]) == [self.c1, self.c2]
@@ -198,9 +181,7 @@ class TestTemplateTags:
     def test_whitespace_in_get_comment_list_tag(self):
         """Test get_comment_list tag with whitespace handling."""
         self.create_some_comments()
-        self.verify_get_comment_list(
-            "{% load comment_testtags %}{% get_comment_list for p|noop:'x y' as cl %}"
-        )
+        self.verify_get_comment_list("{% load comment_testtags %}{% get_comment_list for p|noop:'x y' as cl %}")
 
     def test_get_comment_permalink(self):
         """Test get_comment_permalink tag."""
@@ -236,16 +217,19 @@ class TestTemplateTags:
     def test_render_comment_list(self, tag=None):
         """Test render_comment_list tag."""
         self.create_some_comments()
-        t = "{% load tree_comments %}" + (
-            tag or "{% render_comment_list for app.post p.id %}"
-        )
+        # Support a <<PK>> placeholder: replaced after create yields the real pk
+        # (PG/MySQL auto-increment sequences are not reset after transaction rollback,
+        # so id=1 cannot be assumed). str.replace is used to avoid str.format clashing
+        # with Django template {% syntax.
+        t = "{% load tree_comments %}" + (tag or "{% render_comment_list for app.post p.id %}")
+        t = t.replace("<<PK>>", str(self.post.pk))
         ctx, out = self.render(t, p=self.post)
         assert out.strip().startswith('<dl id="comments">')
         assert out.strip().endswith("</dl>")
 
     def test_render_comment_list_from_literal(self):
         """Test render_comment_list tag with literal object."""
-        self.test_render_comment_list("{% render_comment_list for app.post 1 %}")
+        self.test_render_comment_list("{% render_comment_list for app.post <<PK>> %}")
 
     def test_render_comment_list_from_object(self):
         """Test render_comment_list tag with object instance."""
@@ -260,9 +244,8 @@ class TestTemplateTags:
     def test_render_comment_app(self, tag=None):
         """Test render_comment_app tag renders app container, form, and threaded list."""
         self.create_some_comments()
-        t = "{% load tree_comments %}" + (
-            tag or "{% render_comment_app for app.post p.id %}"
-        )
+        t = "{% load tree_comments %}" + (tag or "{% render_comment_app for app.post p.id %}")
+        t = t.replace("<<PK>>", str(self.post.pk))
         ctx, out = self.render(t, p=self.post)
         assert 'class="tree-comments-app"' in out
         assert 'id="comment-form"' in out
@@ -275,7 +258,7 @@ class TestTemplateTags:
 
     def test_render_comment_app_from_literal(self):
         """Test render_comment_app tag with literal object."""
-        self.test_render_comment_app("{% render_comment_app for app.post 1 %}")
+        self.test_render_comment_app("{% render_comment_app for app.post <<PK>> %}")
 
     def test_render_comment_app_from_object(self):
         """Test render_comment_app tag with object instance."""
@@ -313,56 +296,55 @@ class TestTemplateTags:
         assert f'id="c{child.id}"' in out
         assert "is-child" in out
 
-    # FIXME
-    # def test_number_queries(self, django_assert_num_queries):
-    #     """
-    #     Ensure that the template tags use cached content types to reduce the
-    #     number of DB queries.
-    #     Refs #16042.
-    #     """
-    #     # {% render_comment_list %} -----------------
+    def test_number_queries_render_comment_list(self, django_assert_num_queries, post):
+        """{% render_comment_list %} query count is stable (no N+1)."""
+        ContentType.objects.clear_cache()
+        with django_assert_num_queries(2):
+            self.render("{% load tree_comments %}{% render_comment_list for p %}", p=post)
+        # ContentType cached on the second call.
+        with django_assert_num_queries(1):
+            self.render("{% load tree_comments %}{% render_comment_list for p %}", p=post)
 
-    #     # Clear CT cache
-    #     ContentType.objects.clear_cache()
-    #     with django_assert_num_queries(3):
-    #         self.test_render_comment_list_from_object()
+    def test_number_queries_get_comment_list(self, django_assert_num_queries, post, comment):
+        """{% get_comment_list %} query count is stable."""
+        ContentType.objects.clear_cache()
+        with django_assert_num_queries(1):
+            self.render("{% load tree_comments %}{% get_comment_list for p as cl %}", p=post)
+        with django_assert_num_queries(0):
+            self.render("{% load tree_comments %}{% get_comment_list for p as cl %}", p=post)
 
-    #     # CT's should be cached
-    #     with django_assert_num_queries(2):
-    #         self.test_render_comment_list_from_object()
+    def test_number_queries_render_comment_form(self, django_assert_num_queries, post):
+        """{% render_comment_form %} query count is stable."""
+        ContentType.objects.clear_cache()
+        with django_assert_num_queries(1):
+            self.render("{% load tree_comments %}{% render_comment_form for p %}", p=post)
+        with django_assert_num_queries(0):
+            self.render("{% load tree_comments %}{% render_comment_form for p %}", p=post)
 
-    #     # {% get_comment_list %} --------------------
+    def test_number_queries_get_comment_form(self, django_assert_num_queries, post):
+        """{% get_comment_form %} does not hit the database."""
+        ContentType.objects.clear_cache()
+        with django_assert_num_queries(0):
+            self.render("{% load tree_comments %}{% get_comment_form for p as form %}", p=post)
 
-    #     ContentType.objects.clear_cache()
-    #     with django_assert_num_queries(4):
-    #         self.verify_get_comment_list()
+    def test_number_queries_get_comment_count(self, django_assert_num_queries, post, comment):
+        """{% get_comment_count %} query count is stable."""
+        ContentType.objects.clear_cache()
+        with django_assert_num_queries(2):
+            self.render(
+                "{% load tree_comments %}{% get_comment_count for p as cc %}{{ cc }}",
+                p=post,
+            )
+        with django_assert_num_queries(1):
+            self.render(
+                "{% load tree_comments %}{% get_comment_count for p as cc %}{{ cc }}",
+                p=post,
+            )
 
-    #     with django_assert_num_queries(3):
-    #         self.verify_get_comment_list()
-
-    #     # {% render_comment_form %} -----------------
-
-    #     ContentType.objects.clear_cache()
-    #     with django_assert_num_queries(3):
-    #         self.test_render_comment_form()
-
-    #     with django_assert_num_queries(2):
-    #         self.test_render_comment_form()
-
-    #     # {% get_comment_form %} --------------------
-
-    #     ContentType.objects.clear_cache()
-    #     with django_assert_num_queries(3):
-    #         self.test_get_comment_form()
-
-    #     with django_assert_num_queries(2):
-    #         self.test_get_comment_form()
-
-    #     # {% get_comment_count %} -------------------
-
-    #     ContentType.objects.clear_cache()
-    #     with django_assert_num_queries(3):
-    #         self.verify_get_comment_count()
-
-    #     with django_assert_num_queries(2):
-    #         self.verify_get_comment_count()
+    def test_render_comment_app_no_n_plus_1(self, django_assert_num_queries, post, comment, anonymous_comment):
+        """{% render_comment_app %} uses a single CTE query regardless of
+        the number of comments (no N+1 on parent/user/content_type)."""
+        ContentType.objects.clear_cache()
+        ContentType.objects.get_for_model(Post)
+        with django_assert_num_queries(1):
+            self.render("{% load tree_comments %}{% render_comment_app for p %}", p=post)

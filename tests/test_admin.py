@@ -34,9 +34,7 @@ class TestCommentsAdminActions:
         comment_model = get_comment_model()
         comments_admin = CommentsAdmin(comment_model, admin.site)
 
-        normal = django_user_model.objects.create_user(
-            username="normal", email="normal@example.com", password="normal"
-        )
+        normal = django_user_model.objects.create_user(username="normal", email="normal@example.com", password="normal")
         request = self.build_request(normal)
         actions = comments_admin.get_actions(request)
         assert "flag_comments" in actions
@@ -44,9 +42,7 @@ class TestCommentsAdminActions:
         assert "remove_comments" not in actions
         assert "delete_selected" not in actions
 
-    def test_get_actions_includes_moderation_actions_for_moderator(
-        self, django_user_model
-    ):
+    def test_get_actions_includes_moderation_actions_for_moderator(self, django_user_model):
         comment_model = get_comment_model()
         comments_admin = CommentsAdmin(comment_model, admin.site)
 
@@ -66,12 +62,7 @@ class TestCommentsAdminActions:
         assert flag_model.objects.count() == 0
 
         comments_admin.flag_comments(request, comment_model.objects.filter(pk=comment.pk))
-        assert (
-            flag_model.objects.filter(
-                comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL
-            ).count()
-            == 1
-        )
+        assert flag_model.objects.filter(comment=comment, user=admin_user, flag=flag_model.SUGGEST_REMOVAL).count() == 1
 
         messages = list(m.message for m in request._messages)
         assert "1 comment was successfully flagged." in messages
@@ -83,9 +74,7 @@ class TestCommentsAdminActions:
         request = self.build_request(moderator)
         flag_model = get_comment_flag_model()
 
-        comments_admin.remove_comments(
-            request, comment_model.objects.filter(pk=comment.pk)
-        )
+        comments_admin.remove_comments(request, comment_model.objects.filter(pk=comment.pk))
         comment.refresh_from_db()
         assert comment.is_removed is True
         assert (
@@ -111,9 +100,7 @@ class TestCommentsAdminActions:
         comment.is_public = False
         comment.save(update_fields=["is_removed", "is_public"])
 
-        comments_admin.approve_comments(
-            request, comment_model.objects.filter(pk=comment.pk)
-        )
+        comments_admin.approve_comments(request, comment_model.objects.filter(pk=comment.pk))
         comment.refresh_from_db()
         assert comment.is_removed is False
         assert comment.is_public is True
@@ -128,4 +115,3 @@ class TestCommentsAdminActions:
 
         messages = list(m.message for m in request._messages)
         assert "1 comment was successfully approved." in messages
-

@@ -14,6 +14,7 @@ Create your custom model:
 # myapp/models.py
 from tree_comments.models import AbstractComment
 
+
 class CustomComment(AbstractComment):
     # Add custom fields
     rating = models.IntegerField(default=5)
@@ -25,7 +26,7 @@ class CustomComment(AbstractComment):
 Configure in settings:
 
 ```python
-TREE_COMMENTS_COMMENT_MODEL = 'myapp.CustomComment'
+TREE_COMMENTS_COMMENT_MODEL = "myapp.CustomComment"
 ```
 
 ### Custom Comment Flag Model
@@ -35,6 +36,7 @@ Create your custom flag model:
 ```python
 # myapp/models.py
 from tree_comments.models import AbstractCommentFlag
+
 
 class CustomCommentFlag(AbstractCommentFlag):
     # Add custom fields
@@ -47,7 +49,7 @@ class CustomCommentFlag(AbstractCommentFlag):
 Configure in settings:
 
 ```python
-TREE_COMMENTS_COMMENT_FLAG_MODEL = 'myapp.CustomCommentFlag'
+TREE_COMMENTS_COMMENT_FLAG_MODEL = "myapp.CustomCommentFlag"
 ```
 
 ## Custom Forms
@@ -58,11 +60,12 @@ Create a custom form:
 # myapp/forms.py
 from tree_comments.forms import CommentDetailsForm
 
+
 class CustomCommentForm(CommentDetailsForm):
     rating = forms.IntegerField(min_value=1, max_value=5)
 
     def clean_rating(self):
-        rating = self.cleaned_data['rating']
+        rating = self.cleaned_data["rating"]
         # Custom validation
         return rating
 ```
@@ -70,7 +73,7 @@ class CustomCommentForm(CommentDetailsForm):
 Configure in settings:
 
 ```python
-TREE_COMMENTS_COMMENT_FORM = 'myapp.forms.CustomCommentForm'
+TREE_COMMENTS_COMMENT_FORM = "myapp.forms.CustomCommentForm"
 ```
 
 ## Custom Managers
@@ -80,6 +83,7 @@ Extend the CommentManager:
 ```python
 # myapp/managers.py
 from tree_comments.managers import CommentManager as BaseCommentManager
+
 
 class CommentManager(BaseCommentManager):
     def with_ratings(self):
@@ -109,12 +113,9 @@ When creating custom models:
 from django.db import models
 from tree_comments.models import AbstractComment
 
+
 class Comment(AbstractComment):
-    mentioned_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        related_name='mentions'
-    )
+    mentioned_users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="mentions")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

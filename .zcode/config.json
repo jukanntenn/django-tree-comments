@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python .claude/hooks/format_on_edit.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python .claude/hooks/lint_gate.py"
+          }
+        ]
+      }
+    ]
+  }
+}

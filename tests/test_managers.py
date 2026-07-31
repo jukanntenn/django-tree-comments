@@ -186,9 +186,7 @@ class TestManager:
         queryset = (
             Comment.objects.cte_for_instance(self.post)
             .select_related("user")
-            .prefetch_related(
-                Prefetch("user__user_permissions", queryset=Permission.objects.all())
-            )
+            .prefetch_related(Prefetch("user__user_permissions", queryset=Permission.objects.all()))
         )
 
         # Apply ordering
@@ -202,3 +200,35 @@ class TestManager:
         # Verify permissions were prefetched
         for comment in comments:
             list(comment.user.user_permissions.all())
+
+    def test_threaded_for_instance_no_n_plus_1(self, django_assert_num_queries, post, admin_user):
+        """threaded_for_instance uses a single CTE query with select_related
+        on parent/user/content_type — no N+1 regardless of comment count."""
+        ct = ContentType.objects.get_for_model(Post)
+        site = Site.objects.get_current()
+        # Create a parent + child to exercise select_related("parent").
+        root = Comment.objects.create(
+            content_type=ct,
+            object_pk=post.pk,
+            site=site,
+            user=admin_user,
+            comment="root",
+        )
+        Comment.objects.create(
+            content_type=ct,
+            object_pk=post.pk,
+            site=site,
+            user=admin_user,
+            comment="child",
+            parent=root,
+        )
+        # Warm the ContentType cache so it doesn't add a query.
+        ContentType.objects.get_for_model(Post)
+
+        with django_assert_num_queries(1):
+            comments = list(Comment.objects.threaded_for_instance(post))
+        # Accessing relations must not trigger extra queries.
+        for comment in comments:
+            _ = comment.parent
+            _ = comment.user
+            _ = comment.content_type

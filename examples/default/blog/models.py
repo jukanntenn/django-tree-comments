@@ -7,7 +7,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(blank=True)
     created_at = models.DateTimeField()
-    enable_comments = models.BooleanField(default=False)
+    enable_comments = models.BooleanField(default=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="user",
@@ -18,6 +18,10 @@ class Post(models.Model):
     class Meta:
         verbose_name = "post"
         verbose_name_plural = "posts"
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return self.title
 
     def save(self, *args, **kwargs):
         if not self.created_at:

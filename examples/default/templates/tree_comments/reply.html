@@ -1,0 +1,53 @@
+{% load tree_comments i18n %}
+<div class="tc-reply-form" id="reply-form-{{ parent.id }}">
+    <form action="{% comment_form_target %}?format=html"
+          method="post"
+          class="tc-composer"
+          hx-post="{% comment_form_target %}?format=html"
+          hx-target="#children-of-{{ parent.id }}"
+          hx-swap="beforeend">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {% for field in form %}
+            {% if field.is_hidden %}{{ field }}{% endif %}
+        {% endfor %}
+        {% for field in form %}
+            {% if field.name == "honeypot" %}
+                <div style="display:none" aria-hidden="true">{{ field.label_tag }} {{ field }}</div>
+            {% elif not field.is_hidden and field.name == "comment" %}
+                <div class="tc-reply-form__context">
+                    <span class="tc-avatar tc-avatar--xs"
+                          data-name="{{ parent.name }}"
+                          aria-hidden="true">{{ parent.name|slice:":1" }}</span>
+                    <span>{% blocktranslate with name=parent.name %}Replying to {{ name }}{% endblocktranslate %}</span>
+                </div>
+                <div class="tc-field{% if field.errors %} tc-field--error{% endif %}">
+                    {{ field }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}<span class="tc-field-error">{{ error }}</span>{% endfor %}
+                    {% endif %}
+                </div>
+            {% elif not field.is_hidden and field.name != "parent" %}
+                <div class="tc-field{% if field.errors %} tc-field--error{% endif %}">
+                    <label class="tc-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}<span class="tc-field-error">{{ error }}</span>{% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="tc-composer__footer">
+            <span class="tc-charcount"
+                  data-charcount
+                  data-maxlength="{{ form.fields.comment.max_length|default:3000 }}"
+                  aria-live="polite"></span>
+            <div class="tc-composer__actions">
+                <button type="button"
+                        class="tc-btn tc-btn--ghost"
+                        onclick="this.closest('.tc-reply-form').remove()">{% trans "Cancel" %}</button>
+                <button type="submit" name="post" class="tc-btn tc-btn--primary">{% trans "Reply" %}</button>
+            </div>
+        </div>
+    </form>
+</div>

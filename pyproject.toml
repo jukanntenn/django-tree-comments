@@ -1,119 +1,229 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
+
 [project]
 name = "django-tree-comments"
-version = "0.0.5"
+version = "0.0.4rc1"
 description = "A Django app for threaded comments using Common Table Expressions (CTE)"
 readme = "README.md"
+keywords = [ "comments", "cte", "django", "nested", "replies", "threaded", "tree" ]
 license = "BSD-3-Clause"
-license-files = ["LICENSE"]
-requires-python = ">=3.8"
-authors = [
-    { name = "jukanntenn", email = "jukanntenn@outlook.com" }
-]
-maintainers = [
-    { name = "jukanntenn", email = "jukanntenn@outlook.com" }
-]
-keywords = [
-    "django",
-    "comments",
-    "threaded",
-    "tree",
-    "cte",
-    "nested",
-    "replies"
-]
+license-files = [ "LICENSE" ]
+maintainers = [ { name = "jukanntenn", email = "jukanntenn@outlook.com" } ]
+authors = [ { name = "jukanntenn", email = "jukanntenn@outlook.com" } ]
+requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Environment :: Web Environment",
-    "Framework :: Django",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.0",
-    "Framework :: Django :: 5.1",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+  "Development Status :: 3 - Alpha",
+  "Environment :: Web Environment",
+  "Framework :: Django",
+  "Framework :: Django :: 5.2",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 dependencies = [
-    "django>=4.2",
-    "django-cte>=1.3.3",
+  "django>=5.2",
+  "django-cte>=1.3.3",
 ]
-
-[project.optional-dependencies]
-test = [
-    "pytest>=7.0",
-    "pytest-django>=4.5",
-    "pytest-cov>=4.0",
-]
-dev = [
-    "django-tree-comments[test]",
-    "ruff>=0.1.0",
-    "djlint>=1.7.0",
-]
-docs = [
-    "mkdocs>=1.5.0",
-    "mkdocs-material>=9.0.0",
-    "pymdown-extensions>=10.0.0",
-]
-
-[project.urls]
-Homepage = "https://github.com/jukanntenn/django-tree-comments"
-Documentation = "https://django-tree-comments.readthedocs.io"
-Repository = "https://github.com/jukanntenn/django-tree-comments"
-Changelog = "https://github.com/jukanntenn/django-tree-comments/blob/main/CHANGELOG.md"
-Issues = "https://github.com/jukanntenn/django-tree-comments/issues"
-
-[tool.hatch.build.targets.sdist]
-include = ["tree_comments"]
-
-[tool.hatch.build.targets.wheel]
-include = ["tree_comments"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+urls.Changelog = "https://github.com/jukanntenn/django-tree-comments/blob/main/CHANGELOG.md"
+urls.Documentation = "https://django-tree-comments.readthedocs.io"
+urls.Homepage = "https://github.com/jukanntenn/django-tree-comments"
+urls.Issues = "https://github.com/jukanntenn/django-tree-comments/issues"
+urls.Repository = "https://github.com/jukanntenn/django-tree-comments"
 
 [dependency-groups]
 dev = [
-    "djlint>=1.35.2",
-    "pytest>=8.3.5",
-    "pytest-cov>=5.0.0",
-    "pytest-django>=4.5.2",
-    "ruff>=0.15.4",
+  "django-stubs[compatible-mypy]>=6.0.7",
+  "djlint>=1.42.3",
+  "factory-boy>=3.3.1",
+  "mypy>=2.3",
+  "mysqlclient>=2.2.7",
+  "psycopg[binary]>=3.2.13",
+  "pytest>=8.3.5",
+  "pytest-benchmark>=4",
+  "pytest-cov>=5",
+  "pytest-django>=4.5.2",
+  "ruff>=0.16",
 ]
 docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.7.3",
-    "pymdown-extensions>=10.15",
+  "mkdocs>=1.6.1",
+  "mkdocs-material>=9.7.3",
+  "pymdown-extensions>=10.15",
 ]
 
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "tests.settings"
-python_files = "tests.py test_*.py"
-addopts = "-v --tb=short"
+[tool.hatch]
+# Only the library ships in the release package. The trailing slash makes the
+# include match the top-level tree_comments/ package only (not examples that
+# happen to contain a tree_comments/ subdirectory in their templates/static).
+build.targets.wheel.include = [ "tree_comments/" ]
+# examples/, tests/, docs/, etc. are repo-only and must never be packaged.
+build.targets.wheel.exclude = [ "**/*.bak", "**/*.po~", "**/*~", "docs/", "e2e/", "examples/", "perf/", "tests/" ]
+build.targets.sdist.include = [ "tree_comments/" ]
+build.targets.sdist.exclude = [ "**/*.bak", "**/*.po~", "**/*~", "docs/", "e2e/", "examples/", "perf/", "tests/" ]
 
-[tool.uv.workspace]
-exclude = ["examples/default", "examples/custom"]
+[tool.uv]
+workspace.exclude = [ "examples/custom", "examples/default" ]
+
+[tool.djlint]
+profile = "django"
+exclude = "examples"
+use_gitignore = true
+indent = 4
+max_attribute_length = 70
+max_line_length = 120
+ignore = "H030,H031"
 
 [tool.ruff]
-exclude = ["**/migrations/"]
+target-version = "py310"
+line-length = 120
+indent-width = 4
+exclude = [ "**/migrations/", ".local", ".venv", "build", "dist", "node_modules" ]
+format.indent-style = "space"
+format.quote-style = "double"
+format.line-ending = "auto"
+lint.select = [
+  "A",
+  "ASYNC",
+  "B",
+  "B9",
+  "BLE",
+  "C4",
+  "C90",
+  "DJ",
+  "E",
+  "F",
+  "FURB",
+  "G",
+  "I",
+  "LOG",
+  "N",
+  "PERF",
+  "PGH",
+  "PIE",
+  "PLR",
+  "PLW",
+  "PT",
+  "PTH",
+  "RET",
+  "RUF",
+  "S",
+  "SIM",
+  "TC",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+lint.ignore = [
+  "PLR2004",
+  "PT018",
+  "PT028",
+  "RUF043",
+]
+lint.per-file-ignores."**/settings.py" = [ "S105" ]
+lint.per-file-ignores."examples/**" = [
+  "B007",
+  "C901",
+  "PLR0912",
+  "PLR0913",
+  "PLR0917",
+  "RUF002",
+  "RUF003",
+  "S",
+  "TID252"
+]
+lint.per-file-ignores."perf/**" = [
+  "B007",
+  "B905",
+  "BLE001",
+  "C901",
+  "E501",
+  "PERF401",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+  "PLR0917",
+  "PLW0603",
+  "PTH123",
+  "RET504",
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  "S",
+  "S311",
+  "S607",
+  "SIM105",
+  "SIM108",
+  "SIM113",
+  "TC001",
+]
+lint.per-file-ignores."tests/**" = [
+  "BLE001",
+  "C400",
+  "DJ008",
+  "N806",
+  "PLR2004",
+  "PLW0603",
+  "PT",
+  "PTH103",
+  "PTH118",
+  "PTH123",
+  "RET504",
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  "RUF059",
+  "S",
+  "UP031",
+]
+lint.isort.known-first-party = [ "tree_comments" ]
+lint.mccabe.max-complexity = 15
+lint.pylint.max-args = 6
+lint.pylint.max-branches = 12
+lint.pylint.max-positional-args = 5
+lint.pylint.max-returns = 8
+lint.pylint.max-statements = 60
 
-[tool.coverage.run]
-source = ["tree_comments"]
-branch = true
+[tool.mypy]
+python_version = "3.10"
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict = true
+plugins = [ "mypy_django_plugin.main" ]
+overrides = [
+  { module = "tests.*", ignore_errors = true },
+  { module = "examples.*", ignore_errors = true },
+  { module = "perf.*", ignore_errors = true },
+]
+no_implicit_optional = true
 
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
+[tool.pytest]
+ini_options.python_files = "tests.py test_*.py"
+ini_options.addopts = "-v --tb=short --reuse-db --strict-markers --benchmark-storage=file://./perf/.benchmarks"
+ini_options.markers = [
+  "e2e: end-to-end browser tests (slow, needs docker + playwright)",
+]
+ini_options.DJANGO_SETTINGS_MODULE = "tests.settings"
+
+[tool.coverage]
+run.branch = true
+run.source = [ "tree_comments" ]
+report.exclude_lines = [
+  "def __repr__",
+  "pragma: no cover",
+  "raise AssertionError",
+  "raise NotImplementedError",
 ]

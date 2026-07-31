@@ -1,18 +1,19 @@
 """
 Tests for the public API functions and swappable model support.
 """
+
 import pytest
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse
 
 from tree_comments import (
-    get_comment_model,
+    get_approve_url,
     get_comment_flag_model,
     get_comment_form,
     get_comment_form_target,
-    get_flag_url,
+    get_comment_model,
     get_delete_url,
-    get_approve_url,
+    get_flag_url,
 )
 
 

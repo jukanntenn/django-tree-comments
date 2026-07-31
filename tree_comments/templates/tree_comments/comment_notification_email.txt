@@ -1,1 +1,8 @@
-comment email
+A comment has been posted on {{ content_object }}.
+
+By {{ comment.name }} on {{ comment.submit_date|date:"Y-m-d H:i:s" }}:
+
+{{ comment.comment }}
+
+See the comment in context:
+{{ comment.get_absolute_url }}

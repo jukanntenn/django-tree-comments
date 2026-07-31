@@ -15,17 +15,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Article',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-            ],
-            options={
-                'verbose_name': 'article',
-                'verbose_name_plural': 'articles',
-            },
-        ),
-        migrations.CreateModel(
             name='Post',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

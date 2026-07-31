@@ -72,5 +72,5 @@ class TestManagementCommands:
 
         call_command("delete_stale_comments", "--yes", verbosity=0)
 
-        assert 0 == Comment.objects.for_model(Post).count()
+        assert Comment.objects.for_model(Post).count() == 0
         assert (initial_count - post_comments_count) == Comment.objects.count()

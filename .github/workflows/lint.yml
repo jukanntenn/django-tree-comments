@@ -1,0 +1,31 @@
+name: Lint
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - '**.html'
+      - 'pyproject.toml'
+      - 'prek.toml'
+      - '.editorconfig'
+  pull_request:
+    paths:
+      - '**.py'
+      - '**.html'
+      - 'pyproject.toml'
+      - 'prek.toml'
+      - '.editorconfig'
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  prek:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: j178/prek-action@v5

@@ -56,7 +56,7 @@ pip install django-tree-comments
 INSTALLED_APPS = [
     # Remove 'django_comments'
     # Add 'tree_comments'
-    'tree_comments',
+    "tree_comments",
 ]
 ```
 
@@ -65,12 +65,12 @@ INSTALLED_APPS = [
 ```python
 # Old
 urlpatterns = [
-    path('comments/', include('django_comments.urls')),
+    path("comments/", include("django_comments.urls")),
 ]
 
 # New
 urlpatterns = [
-    path('comments/', include('tree_comments.urls')),
+    path("comments/", include("tree_comments.urls")),
 ]
 ```
 
@@ -109,7 +109,7 @@ The existing `Comment` table will be preserved. Django Tree Comments uses the sa
 Django Tree Comments will add a `parent` column to your existing comments table:
 
 ```sql
-ALTER TABLE django_comments ADD COLUMN parent_id INTEGER NULL;
+ALTER TABLE tree_comments_comment ADD COLUMN parent_id INTEGER NULL;
 ```
 
 ## Using New Features
@@ -121,10 +121,7 @@ Now you can create threaded comments:
 ```python
 # Create a reply
 reply = Comment.objects.create(
-    content_object=article,
-    parent=original_comment,
-    comment="This is a reply",
-    user=request.user
+    content_object=article, parent=original_comment, comment="This is a reply", user=request.user
 )
 ```
 
@@ -136,7 +133,7 @@ Use the new CTE-based manager:
 # Get threaded comments with level information
 comments = Comment.objects.cte_for_instance(article)
 for comment in comments:
-    print(f"{'  ' * comment.level}{comment.comment}")
+    print(f"{'  ' * comment.depth}{comment.comment}")
 ```
 
 ### JSON API
@@ -155,8 +152,8 @@ fetch('/comments/', {
 
 If you have a custom comment model:
 
-1. Change base class from `django_comments.models.AbstractComment` to `tree_comments.models.AbstractComment`
-2. Update `TREE_COMMENTS_COMMENT_MODEL` setting (was `COMMENTS_COMMENT_MODEL`)
+1. Change base class from `django_comments.models.CommentAbstractModel` to `tree_comments.models.AbstractComment`
+2. Register the model via `TREE_COMMENTS_COMMENT_MODEL` (replaces the old `COMMENTS_APP` mechanism)
 
 ## Signals
 

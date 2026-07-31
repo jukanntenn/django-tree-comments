@@ -66,9 +66,7 @@ class TestCommentForm:
         self.tamper_with_form(post, timestamp=str(time.time() - 28800))
 
     def test_security_hash_tampering(self, post):
-        self.tamper_with_form(
-            post, security_hash="Nobody expects the Spanish Inquisition!"
-        )
+        self.tamper_with_form(post, security_hash="Nobody expects the Spanish Inquisition!")
 
     def test_content_type_tampering(self, post):
         self.tamper_with_form(post, content_type="auth.user")
@@ -116,24 +114,3 @@ class TestCommentForm:
 
         comment = form.get_comment_object(site_id=site.id)
         assert comment.site_id == site.id
-
-    def test_profanities(self, post, settings):
-        """Test COMMENTS_ALLOW_PROFANITIES and PROFANITIES_LIST settings"""
-        data = self.get_valid_data(post)
-
-        # Don't wanna swear in the unit tests if we don't have to...
-        settings.PROFANITIES_LIST = ["rooster"]
-
-        # Try with COMMENTS_ALLOW_PROFANITIES off
-        settings.COMMENTS_ALLOW_PROFANITIES = False
-        form = CommentForm(
-            target_object=post, data=dict(data, comment="What a rooster!")
-        )
-        assert not form.is_valid()
-
-        # Now with COMMENTS_ALLOW_PROFANITIES on
-        settings.COMMENTS_ALLOW_PROFANITIES = True
-        form = CommentForm(
-            target_object=post, data=dict(data, comment="What a rooster!")
-        )
-        assert form.is_valid()

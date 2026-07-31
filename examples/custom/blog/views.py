@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
@@ -9,10 +8,9 @@ class PostListView(ListView):
     model = Post
     template_name = "blog/index.html"
     context_object_name = "posts"
-    paginate_by = None
 
     def get_queryset(self):
-        return Post.objects.all().order_by("-created_at")
+        return Post.objects.all()
 
 
 class PostDetailView(DetailView):
@@ -24,6 +22,3 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["next"] = reverse("blog-detail", kwargs={"pk": self.object.pk})
         return context
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Post, pk=self.kwargs.get("pk"))

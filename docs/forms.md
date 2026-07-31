@@ -81,11 +81,12 @@ Create a custom form by extending CommentDetailsForm:
 ```python
 from tree_comments.forms import CommentDetailsForm
 
+
 class CustomCommentForm(CommentDetailsForm):
     def clean_comment(self):
-        comment = self.cleaned_data['comment']
+        comment = self.cleaned_data["comment"]
         # Add custom validation
-        if 'spam' in comment.lower():
+        if "spam" in comment.lower():
             raise forms.ValidationError("No spam allowed!")
         return comment
 ```
@@ -93,5 +94,5 @@ class CustomCommentForm(CommentDetailsForm):
 Configure in settings:
 
 ```python
-TREE_COMMENTS_COMMENT_FORM = 'myapp.forms.CustomCommentForm'
+TREE_COMMENTS_COMMENT_FORM = "myapp.forms.CustomCommentForm"
 ```

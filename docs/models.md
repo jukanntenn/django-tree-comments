@@ -74,28 +74,49 @@ Custom manager with tree-specific query methods.
 from tree_comments.models import Comment
 
 # Create a root comment
-root = Comment.objects.create(
-    content_object=article,
-    user=request.user,
-    comment="Great article!"
-)
+root = Comment.objects.create(content_object=article, user=request.user, comment="Great article!")
 
 # Create a reply
 reply = Comment.objects.create(
-    content_object=article,
-    user=request.user,
-    parent=root,
-    comment="I agree with this comment"
+    content_object=article, user=request.user, parent=root, comment="I agree with this comment"
 )
 ```
 
 ### Querying Threaded Comments
 
 ```python
-# Get all comments for an article as a tree
+# Get all comments for an article as a tree (single CTE query)
 comments = Comment.objects.cte_for_instance(article)
 
-# Iterate with indentation based on level
+# Each comment is annotated with:
+#   depth   - nesting level (0 for roots)
+#   root_id - id of the top-level ancestor
 for comment in comments:
-    print("  " * comment.level + comment.comment)
+    print("  " * comment.depth + comment.comment)
+```
+
+#### `threaded_for_instance(instance)`
+
+Like `cte_for_instance`, but ordered for threaded display and with
+`select_related("parent", "user", "content_type")` applied so templates can
+render the tree without N+1 queries:
+
+```python
+comments = Comment.objects.threaded_for_instance(article)
+```
+
+#### `roots()`
+
+Return only visible top-level comments (no parent):
+
+```python
+top_level = Comment.objects.for_model(article).roots()
+```
+
+#### `visible()`
+
+Return only public, non-removed comments:
+
+```python
+Comment.objects.visible()
 ```

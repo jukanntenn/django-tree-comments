@@ -1,10 +1,17 @@
-from django.contrib import admin
-from django.contrib import messages
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
 from tree_comments import get_comment_flag_model, get_comment_model
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http import HttpRequest
 
 
 class UsernameSearch:
@@ -13,11 +20,11 @@ class UsernameSearch:
     search in CommentAdmin.
     """
 
-    def __str__(self):
-        return "user__%s" % get_user_model().USERNAME_FIELD
+    def __str__(self) -> str:
+        return f"user__{get_user_model().USERNAME_FIELD}"
 
 
-class CommentsAdmin(admin.ModelAdmin):
+class CommentsAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     fieldsets = (
         (None, {"fields": ("content_type", "object_pk", "site")}),
         (
@@ -43,7 +50,7 @@ class CommentsAdmin(admin.ModelAdmin):
     date_hierarchy = "submit_date"
     ordering = ("-submit_date",)
     raw_id_fields = ("user",)
-    search_fields = (
+    search_fields: tuple[str, ...] = (  # type: ignore[misc,assignment]
         "comment",
         UsernameSearch(),
         "user_name",
@@ -51,12 +58,12 @@ class CommentsAdmin(admin.ModelAdmin):
         "user_url",
         "ip_address",
     )
-    actions = ["flag_comments", "approve_comments", "remove_comments"]
+    actions = ["flag_comments", "approve_comments", "remove_comments"]  # noqa: RUF012
 
-    def get_moderation_permission(self):
+    def get_moderation_permission(self) -> str:
         return f"{get_comment_model()._meta.app_label}.can_moderate"
 
-    def get_actions(self, request):
+    def get_actions(self, request: HttpRequest) -> dict[str, Any]:
         actions = super().get_actions(request)
         # Only superusers should be able to delete the comments from the DB.
         if not request.user.is_superuser and "delete_selected" in actions:
@@ -69,8 +76,8 @@ class CommentsAdmin(admin.ModelAdmin):
         return actions
 
     @admin.action(description=_("Flag selected comments"))
-    def flag_comments(self, request, queryset):
-        flag_model = get_comment_flag_model()
+    def flag_comments(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
+        flag_model: Any = get_comment_flag_model()
         flagged = 0
         for comment in queryset:
             _, created = flag_model.objects.get_or_create(
@@ -92,8 +99,8 @@ class CommentsAdmin(admin.ModelAdmin):
         )
 
     @admin.action(description=_("Approve selected comments"))
-    def approve_comments(self, request, queryset):
-        flag_model = get_comment_flag_model()
+    def approve_comments(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
+        flag_model: Any = get_comment_flag_model()
         approved = 0
         for comment in queryset:
             _, created = flag_model.objects.get_or_create(
@@ -118,8 +125,8 @@ class CommentsAdmin(admin.ModelAdmin):
         )
 
     @admin.action(description=_("Remove selected comments"))
-    def remove_comments(self, request, queryset):
-        flag_model = get_comment_flag_model()
+    def remove_comments(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
+        flag_model: Any = get_comment_flag_model()
         removed = 0
         for comment in queryset:
             _, created = flag_model.objects.get_or_create(

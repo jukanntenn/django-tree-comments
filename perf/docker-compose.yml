@@ -1,0 +1,57 @@
+# Database services used by the performance harness.
+# Local use only (the harness does not depend on CI).
+#
+# Run from the repository root (the compose file lives under perf/):
+# Start:  docker compose -f perf/docker-compose.yml up -d
+# Stop:   docker compose -f perf/docker-compose.yml down
+# Status: docker compose -f perf/docker-compose.yml ps
+#
+# Version basis (verified against Django 5.2.7 source):
+#   - PostgreSQL >= 14  (postgresql/features.py: minimum_database_version = (14,))
+#   - MySQL      >= 8.0.11 (docs/ref/databases.txt:439)
+#   postgres:16 / mysql:8.0 are chosen as current stable versions that satisfy the lower bounds.
+#
+# Credentials match the defaults in tests/settings.py (treecomments / treecomments / tree_comments_perf).
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: treecomments-postgres
+    environment:
+      POSTGRES_DB: tree_comments_perf
+      POSTGRES_USER: treecomments
+      POSTGRES_PASSWORD: treecomments
+    ports:
+      - "5432:5432"
+    # Performance diagnostics: EXPLAIN (ANALYZE, BUFFERS) etc. do not require superuser,
+    # but some metrics (e.g. pg_stat_statements) need elevated privileges. This harness
+    # does not use pg_stat_statements, so the default user suffices. Command-line
+    # arguments are kept for future extension.
+    command: >
+      postgres
+      -c max_connections=50
+      -c shared_buffers=128MB
+
+  mysql:
+    image: mysql:8.0
+    container_name: treecomments-mysql
+    environment:
+      MYSQL_DATABASE: tree_comments_perf
+      MYSQL_USER: treecomments
+      MYSQL_PASSWORD: treecomments
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      # Executed automatically on first start: grants database-creation privileges to the
+      # treecomments user (Django tests require test_<db>).
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/01-grant-permissions.sql:ro
+    # The MySQL container's command is passed directly as mysqld arguments; shell comments
+    # are not supported.
+    # Recursive CTE depth limit: the chain scenario is clipped to 1000 on MySQL, so the
+    # default value is sufficient; the default is declared explicitly to avoid
+    # non-reproducible results caused by differing defaults across MySQL versions.
+    command:
+      - --max_connections=50
+      - --innodb_buffer_pool_size=128M
+      - --cte_max_recursion_depth=1000

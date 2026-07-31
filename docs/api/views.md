@@ -1,175 +1,132 @@
 # Views API
 
-API reference for views in Django Tree Comments.
+API reference for the class-based views in Django Tree Comments.
 
-## Class-Based Views
+All URLs are registered under the `tree_comments` URLconf; include it in your
+project's `urlpatterns`:
+
+```python
+# urls.py
+from django.urls import include, path
+
+urlpatterns = [
+    path("comments/", include("tree_comments.urls")),
+]
+```
+
+## Views
 
 ### CommentPostView
 
 Handle comment form submission.
 
-**URL:** `/comments/post/`
+| | |
+|---|---|
+| **URL name** | `tree-comments-post-comment` |
+| **URL** | `post/` |
+| **Methods** | `POST` |
+| **Decorator** | `@csrf_protect` |
 
-**Methods:**
-- `POST` - Submit a new comment
-
-**Features:**
-- Validates form data
-- Creates comment
-- Supports both HTML and JSON responses
-- Handles threaded comments via `parent` field
-
-**JSON Response:**
-
-```json
-{
-    "comment": {
-        "id": 1,
-        "comment": "Great article!",
-        "user_name": "John",
-        "submit_date": "2026-03-03T10:00:00Z"
-    }
-}
-```
-
-### CommentListView
-
-List comments for an object.
-
-**URL:** `/comments/`
-
-**Methods:**
-- `GET` - Get comments for an object
-
-**Query Parameters:**
-- `content_type` - Content type ID
-- `object_id` - Object primary key
-
-**Features:**
-- Returns comments as HTML or JSON
-- Supports threaded comments
-
-### CommentDetailView
-
-Get details for a single comment.
-
-**URL:** `/comments/<id>/`
-
-**Methods:**
-- `GET` - Get comment details
-
-### ReplyView
-
-Display reply form for a comment.
-
-**URL:** `/comments/<id>/reply/`
-
-**Methods:**
-- `GET` - Display reply form
-
-**Context:**
-- `form` - Comment form with parent pre-filled
-- `title` - "Reply to comment"
-
-### FlagCommentView
-
-Flag a comment for moderation.
-
-**URL:** `/comments/<id>/flag/`
-
-**Methods:**
-- `GET` - Display flag confirmation
-- `POST` - Flag the comment
-
-**Requires:** Authenticated user
-
-### DeleteCommentView
-
-Delete a comment (moderator action).
-
-**URL:** `/comments/<id>/delete/`
-
-**Methods:**
-- `GET` - Display delete confirmation
-- `POST` - Delete the comment
-
-**Requires:** Staff status
-
-### ApproveCommentView
-
-Approve a comment (moderator action).
-
-**URL:** `/comments/<id>/approve/`
-
-**Methods:**
-- `GET` - Display approve confirmation
-- `POST` - Approve the comment
-
-**Requires:** Staff status
-
-## Function-Based Views
-
-### mute_csrf
-
-Decorator that mutes CSRF for specific views.
-
-**Usage:**
-
-```python
-from tree_comments.views import mute_csrf
-
-@mute_csrf
-def my_view(request):
-    # CSRF exempt
-    pass
-```
-
-## JSON API
-
-All views support JSON responses when `Accept: application/json` header is present.
-
-### Example
-
-```javascript
-fetch('/comments/post/', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken
-    },
-    body: JSON.stringify({
-        content_type: 'blog.article',
-        object_pk: '1',
-        comment: 'Great article!'
-    })
-})
-.then(response => response.json())
-.then(data => console.log(data));
-```
-
-## Template Views
+Validates form data, creates the comment (firing `comment_will_be_posted` /
+`comment_was_posted` signals), and supports the `parent` field for threaded
+replies. When the request carries `?format=html` the view returns an HTML
+fragment (form-on-error / comment-on-success) instead of a redirect — useful
+for HTMX-style partial rendering.
 
 ### CommentFormTemplateView
 
-Render comment form for an object.
+Render (or return as JSON) the comment form for a given object.
 
-**URL:** `/comments/form/`
+| | |
+|---|---|
+| **URL name** | `tree-comments-form` |
+| **URL** | `form/` |
+| **Query params** | `content_type`, `object_pk`, optional `parent` |
 
-**Query Parameters:**
-- `content_type` - Content type ID
-- `object_id` - Object primary key
+Returns `form.as_json()` as `application/json` when the `Accept` header
+requests JSON, otherwise renders `tree_comments/form.html`. Passing `parent`
+pre-fills the reply parent.
 
-**Returns:** HTML form or JSON data
+### ReplyView
 
-### CommentListTemplateView
+Display the reply form for a specific comment.
 
-Render comment list for an object.
+| | |
+|---|---|
+| **URL name** | `tree-comments-reply` |
+| **URL** | `<comment_id>/reply/` |
+| **Methods** | `GET` |
 
-**URL:** `/comments/list/`
+Context includes `form` (with `parent` pre-filled) and `title`
+("Reply to comment").
 
-**Query Parameters:**
-- `content_type` - Content type ID
-- `object_id` - Object primary key
+### FlagView
 
-**Returns:** HTML list or JSON data
+Flag a comment for moderator review.
+
+| | |
+|---|---|
+| **URL name** | `tree-comments-flag` |
+| **URL** | `flag/<comment_id>/` |
+| **Methods** | `GET`, `POST` |
+| **Requires** | Authenticated user |
+
+Creates a `CommentFlag` with `SUGGEST_REMOVAL` and fires
+`comment_was_flagged`.
+
+### DeleteView
+
+Remove a comment (moderator action).
+
+| | |
+|---|---|
+| **URL name** | `tree-comments-delete` |
+| **URL** | `delete/<comment_id>/` |
+| **Methods** | `GET`, `POST` |
+| **Requires** | `<app_label>.can_moderate` permission |
+
+Sets `is_removed=True` and creates a `MODERATOR_DELETION` flag.
+
+### ApproveView
+
+Approve a comment from the moderation queue.
+
+| | |
+|---|---|
+| **URL name** | `tree-comments-approve` |
+| **URL** | `approve/<comment_id>/` |
+| **Methods** | `GET`, `POST` |
+| **Requires** | `<app_label>.can_moderate` permission |
+
+Sets `is_public=True` / `is_removed=False` and creates a
+`MODERATOR_APPROVAL` flag.
+
+### Confirmation / done views
+
+| View | URL name | Template |
+|---|---|---|
+| `CommentDoneView` | `tree-comments-comment-done` (`posted/`) | `tree_comments/posted.html` |
+| `FlagDoneView` | `tree-comments-flag-done` (`flagged/`) | `tree_comments/flagged.html` |
+| `DeleteDoneView` | `tree-comments-delete-done` (`deleted/`) | `tree_comments/deleted.html` |
+| `ApproveDoneView` | `tree-comments-approve-done` (`approved/`) | `tree_comments/approved.html` |
+
+### Content-object redirect
+
+`tree-comments-url-redirect` (`cr/<content_type_id>/<object_pk>/`) redirects to
+the commented object's absolute URL.
+
+## Internal helpers
+
+These are not part of the public API but are documented for completeness:
+
+- `CommentPostBadRequest` — HTTP 400 response (renders `400-debug.html` when
+  `DEBUG` is on).
+- `BadRequest` — exception wrapping a `CommentPostBadRequest`, used internally
+  by `resolve_comment_target`.
+- `resolve_comment_target(ctype, object_pk, using=None)` — resolves
+  `content_type` + `object_pk` to the target object, raising `BadRequest` on
+  failure.
+- `inject_comment_target` — decorator that injects the resolved target into
+  `view.kwargs["target"]`.
+- `CommentActionRedirectMixin`, `CommentModerationPermissionMixin` — CBV mixins
+  shared by the moderation views.

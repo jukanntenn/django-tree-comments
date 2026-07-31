@@ -28,6 +28,7 @@ nav:
   - Moderation: moderation.md
   - Signals: signals.md
   - Custom Apps: custom.md
+  - Management Commands: management_commands.md
   - Examples: examples.md
   - API Reference:
     - Managers: api/managers.md

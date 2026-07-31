@@ -5,7 +5,7 @@ A Django app for threaded comments using Common Table Expressions (CTE).
 ## Features
 
 - **Threaded Comments**: Hierarchical comment structure with parent-child relationships
-- **CTE Queries**: Efficient tree queries using PostgreSQL Common Table Expressions
+- **CTE Queries**: Efficient tree queries using recursive Common Table Expressions (PostgreSQL, MySQL, and SQLite)
 - **Modern Architecture**: Class-based views with JSON API support
 - **Swappable Models**: Flexible model customization via settings
 - **Django Admin Integration**: Full admin interface for comment management
@@ -22,9 +22,9 @@ A Django app for threaded comments using Common Table Expressions (CTE).
 
 ## Requirements
 
-- Python 3.8+
-- Django 4.2+
-- PostgreSQL (recommended) or SQLite 3.8.3+
+- Python 3.10+
+- Django 5.2+
+- PostgreSQL, MySQL, or SQLite
 
 ## Installation
 
@@ -48,10 +48,11 @@ Django Tree Comments extends django-contrib-comments with:
 - Threaded comment support via `parent` field
 - CTE-based efficient tree queries
 - Class-based views (CBV) instead of function-based views
-- Built-in JSON API support for AJAX/AJAX requests
+- Built-in JSON API support for AJAX requests
 - Modern Python packaging with pyproject.toml
 
-See the [full comparison](comparison/2026-03-01-django-contrib-comments-comparison.md) for details.
+See the [Migration Guide](migration.md) for details on moving from
+django-contrib-comments.
 
 ## License
 

@@ -1,187 +1,185 @@
 # This file is distributed under the same license as the Django package.
-# 
+#
 # Translators:
 # Translators:
 # Jannis Leidel <jannis@leidel.info>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: django-contrib-comments\n"
+"Project-Id-Version: django-tree-comments\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-22 17:28+0200\n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
 "PO-Revision-Date: 2015-06-22 15:43+0000\n"
 "Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
 "Language-Team: Croatian (http://www.transifex.com/django/django-contrib-comments/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: admin.py:25
+#: tree_comments/admin.py:24
 msgid "Content"
 msgstr "Sadržaj"
 
-#: admin.py:28
+#: tree_comments/admin.py:28
 msgid "Metadata"
 msgstr "Metadata"
 
-#: admin.py:55
-msgid "flagged"
-msgid_plural "flagged"
-msgstr[0] "oznaka"
-msgstr[1] "oznake"
-msgstr[2] "oznake"
-
-#: admin.py:56
+#: tree_comments/admin.py:71
 msgid "Flag selected comments"
 msgstr "Označi ovaj komentar"
 
-#: admin.py:60
-msgid "approved"
-msgid_plural "approved"
-msgstr[0] "odobreno"
-msgstr[1] "odobrene"
-msgstr[2] "odobrene"
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: admin.py:61
+#: tree_comments/admin.py:94
 msgid "Approve selected comments"
 msgstr "Odobri odabrane komentare"
 
-#: admin.py:65
-msgid "removed"
-msgid_plural "removed"
-msgstr[0] "uklonjeno"
-msgstr[1] "uklonjena"
-msgstr[2] "uklonjena"
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: admin.py:66
+#: tree_comments/admin.py:120
 msgid "Remove selected comments"
 msgstr "Ukloni odabrane komentare"
 
-#: admin.py:78
+#: tree_comments/admin.py:137
 #, python-format
-msgid "1 comment was successfully %(action)s."
-msgid_plural "%(count)s comments were successfully %(action)s."
-msgstr[0] "%(count)s komentar je uspješno %(action)s."
-msgstr[1] "%(count)s komentara su uspješno %(action)s."
-msgstr[2] "%(count)s komentara su uspješno %(action)s."
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: feeds.py:14
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "tip sadržaja"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "ID objekta"
+
+#: tree_comments/feeds.py:16
 #, python-format
 msgid "%(site_name)s comments"
 msgstr "komentari za %(site_name)s"
 
-#: feeds.py:20
+#: tree_comments/feeds.py:22
 #, python-format
 msgid "Latest comments on %(site_name)s"
 msgstr "Najnoviji komentari na %(site_name)s"
 
-#: forms.py:105
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
 msgctxt "Person name"
 msgid "Name"
 msgstr ""
 
-#: forms.py:97
+#: tree_comments/forms.py:117
 msgid "Email address"
 msgstr "E-mail adresa"
 
-#: forms.py:98
+#: tree_comments/forms.py:118
 msgid "URL"
 msgstr "URL"
 
-#: forms.py:99
+#: tree_comments/forms.py:121
 msgid "Comment"
 msgstr "Komentar"
 
-#: forms.py:177
-#, python-format
-msgid "Watch your mouth! The word %s is not allowed here."
-msgid_plural "Watch your mouth! The words %s are not allowed here."
-msgstr[0] "Pazite na izražavanje! Riječ %s nije dopuštena."
-msgstr[1] "Pazite na izražavanje! Riječi %s nisu dopuštene."
-msgstr[2] "Pazite na izražavanje! Riječi %s nisu dopuštene."
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
 
-#: forms.py:181 templates/comments/preview.html:16
-msgid "and"
-msgstr "i"
-
-#: forms.py:186
-msgid ""
-"If you enter anything in this field your comment will be treated as spam"
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
 msgstr "Ako unesete nešto u ovo polje vaš komentar biti će tretiran kao spam"
 
-#: models.py:23
-msgid "content type"
-msgstr "tip sadržaja"
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
 
-#: models.py:25
-msgid "object ID"
-msgstr "ID objekta"
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
 
-#: models.py:53 models.py:177
+#: tree_comments/models.py:32 tree_comments/models.py:197
 msgid "user"
 msgstr "korisnik"
 
-#: models.py:55
+#: tree_comments/models.py:38
 msgid "user's name"
 msgstr "korisničko ime"
 
-#: models.py:56
+#: tree_comments/models.py:39
 msgid "user's email address"
 msgstr "e-mail adresa korisnika"
 
-#: models.py:57
+#: tree_comments/models.py:40
 msgid "user's URL"
 msgstr "korisnikov URL"
 
-#: models.py:59 models.py:79 models.py:178
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
 msgid "comment"
 msgstr "komentar"
 
-#: models.py:62
+#: tree_comments/models.py:46
 msgid "date/time submitted"
 msgstr "datum/vrijeme unosa"
 
-#: models.py:63
+#: tree_comments/models.py:49
 msgid "IP address"
 msgstr "IP adresa"
 
-#: models.py:64
+#: tree_comments/models.py:52
 msgid "is public"
 msgstr "javno dostupno"
 
-#: models.py:65
-msgid ""
-"Uncheck this box to make the comment effectively disappear from the site."
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
 msgstr "Uklonite oznaku da bi komentar nestao sa stranica."
 
-#: models.py:67
+#: tree_comments/models.py:59
 msgid "is removed"
 msgstr "uklonjeno"
 
-#: models.py:68
-msgid ""
-"Check this box if the comment is inappropriate. A \"This comment has been "
-"removed\" message will be displayed instead."
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
 msgstr "Uključite ako je komentar neprikladan. Umjesto komentara biti će prikazana poruka \"Komentar je uklonjen.\"."
 
-#: models.py:80
+#: tree_comments/models.py:77
 msgid "comments"
 msgstr "komentari"
 
-#: models.py:124
-msgid ""
-"This comment was posted by an authenticated user and thus the name is read-"
-"only."
-msgstr "Ovaj komentar je napisao prijavljeni korisnik te se ime ne može mijenjati.\n\n%(text)s"
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr ""
+"Ovaj komentar je napisao prijavljeni korisnik te se ime ne može mijenjati.\n"
+"\n"
+"%(text)s"
 
-#: models.py:134
-msgid ""
-"This comment was posted by an authenticated user and thus the email is read-"
-"only."
-msgstr "Ovaj komentar je napisao prijavljeni korisnik te se email ne može mijenjati.\n\n%(text)s"
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr ""
+"Ovaj komentar je napisao prijavljeni korisnik te se email ne može mijenjati.\n"
+"\n"
+"%(text)s"
 
-#: models.py:160
+#: tree_comments/models.py:188
 #, python-format
 msgid ""
 "Posted by %(user)s at %(date)s\n"
@@ -189,109 +187,143 @@ msgid ""
 "%(comment)s\n"
 "\n"
 "http://%(domain)s%(url)s"
-msgstr "Napisao %(user)s dana %(date)s\n\n%(comment)s\n\nhttp://%(domain)s%(url)s"
+msgstr ""
+"Napisao %(user)s dana %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
 
-#: models.py:179
+#: tree_comments/models.py:207
 msgid "flag"
 msgstr "oznaka"
 
-#: models.py:180
+#: tree_comments/models.py:208
 msgid "date"
 msgstr "datum"
 
-#: models.py:190
+#: tree_comments/models.py:217
 msgid "comment flag"
 msgstr "oznaka za komentar"
 
-#: models.py:191
+#: tree_comments/models.py:218
 msgid "comment flags"
 msgstr "oznake komentara"
 
-#: templates/comments/approve.html:4
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr ""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
 msgid "Approve a comment"
 msgstr "Odobri komentar"
 
-#: templates/comments/approve.html:7
+#: tree_comments/templates/tree_comments/approve.html:7
 msgid "Really make this comment public?"
 msgstr "Učini komentar javno dostupnim?"
 
-#: templates/comments/approve.html:12
+#: tree_comments/templates/tree_comments/approve.html:13
 msgid "Approve"
 msgstr "Odobri"
 
-#: templates/comments/approved.html:4
+#: tree_comments/templates/tree_comments/approved.html:4
 msgid "Thanks for approving"
 msgstr "Hvala na odobrenju"
 
-#: templates/comments/approved.html:7 templates/comments/deleted.html:7
-#: templates/comments/flagged.html:7
-msgid ""
-"Thanks for taking the time to improve the quality of discussion on our site"
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
 msgstr "Hvala što ste izdvojili vrijeme da poboljšate kvalitetu rasprava na stranicama"
 
-#: templates/comments/delete.html:4
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
 msgid "Remove a comment"
 msgstr "Ukloni komentar"
 
-#: templates/comments/delete.html:7
+#: tree_comments/templates/tree_comments/delete.html:7
 msgid "Really remove this comment?"
 msgstr "Stvarno ukloni ovaj komentar?"
 
-#: templates/comments/delete.html:12
+#: tree_comments/templates/tree_comments/delete.html:19
 msgid "Remove"
 msgstr "Ukloni"
 
-#: templates/comments/deleted.html:4
+#: tree_comments/templates/tree_comments/deleted.html:4
 msgid "Thanks for removing"
 msgstr "Hvala na brisanju"
 
-#: templates/comments/flag.html:4
+#: tree_comments/templates/tree_comments/flag.html:4
 msgid "Flag this comment"
 msgstr "Označi ovaj komentar"
 
-#: templates/comments/flag.html:7
+#: tree_comments/templates/tree_comments/flag.html:7
 msgid "Really flag this comment?"
 msgstr "Stvarno označi ovaj komentar?"
 
-#: templates/comments/flag.html:12
+#: tree_comments/templates/tree_comments/flag.html:19
 msgid "Flag"
 msgstr "Oznaka"
 
-#: templates/comments/flagged.html:4
+#: tree_comments/templates/tree_comments/flagged.html:4
 msgid "Thanks for flagging"
 msgstr "Hvala na označavanju"
 
-#: templates/comments/form.html:17 templates/comments/preview.html:32
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
 msgid "Post"
 msgstr "Unos"
 
-#: templates/comments/form.html:18 templates/comments/preview.html:33
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
 msgid "Preview"
 msgstr "Prikaz"
 
-#: templates/comments/posted.html:4
+#: tree_comments/templates/tree_comments/posted.html:4
 msgid "Thanks for commenting"
 msgstr "Hvala što ste komentirali"
 
-#: templates/comments/posted.html:7
+#: tree_comments/templates/tree_comments/posted.html:7
 msgid "Thank you for your comment"
 msgstr "Hvala na komentaru"
 
-#: templates/comments/preview.html:4 templates/comments/preview.html.py:13
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
 msgid "Preview your comment"
 msgstr "Prikaz komentara"
 
-#: templates/comments/preview.html:11
+#: tree_comments/templates/tree_comments/preview.html:17
 msgid "Please correct the error below"
 msgid_plural "Please correct the errors below"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/comments/preview.html:16
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr "i"
+
+#: tree_comments/templates/tree_comments/preview.html:30
 msgid "Post your comment"
 msgstr "Objava komentara"
 
-#: templates/comments/preview.html:16
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
 msgid "or make changes"
 msgstr "ili unesite promjene"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

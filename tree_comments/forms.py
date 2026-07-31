@@ -1,15 +1,21 @@
+from __future__ import annotations
+
 import time
+from typing import TYPE_CHECKING, Any
 
 from django import forms
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.forms.utils import ErrorDict
+
+if TYPE_CHECKING:
+    from django.db.models import Model
+
 from django.utils import timezone
 from django.utils.crypto import constant_time_compare, salted_hmac
 from django.utils.encoding import force_str
-from django.utils.text import get_text_list
-from django.utils.translation import gettext, ngettext, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from . import get_comment_model
 
@@ -25,18 +31,22 @@ class CommentSecurityForm(forms.Form):
     content_type = forms.CharField(widget=forms.HiddenInput)
     object_pk = forms.CharField(widget=forms.HiddenInput)
     timestamp = forms.IntegerField(widget=forms.HiddenInput)
-    security_hash = forms.CharField(
-        min_length=40, max_length=40, widget=forms.HiddenInput
-    )
+    security_hash = forms.CharField(min_length=40, max_length=40, widget=forms.HiddenInput)
 
-    def __init__(self, target_object, data=None, initial=None, **kwargs):
+    def __init__(
+        self,
+        target_object: Model,
+        data: dict[str, Any] | None = None,
+        initial: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> None:
         self.target_object = target_object
         if initial is None:
             initial = {}
         initial.update(self.generate_security_data())
         super().__init__(data=data, initial=initial, **kwargs)
 
-    def security_errors(self):
+    def security_errors(self) -> ErrorDict:
         """Return just those errors associated with security"""
         errors = ErrorDict()
         for f in ["honeypot", "timestamp", "security_hash"]:
@@ -44,7 +54,7 @@ class CommentSecurityForm(forms.Form):
                 errors[f] = self.errors[f]
         return errors
 
-    def clean_security_hash(self):
+    def clean_security_hash(self) -> str:
         """Check the security hash."""
         security_hash_dict = {
             "content_type": self.data.get("content_type", ""),
@@ -52,30 +62,29 @@ class CommentSecurityForm(forms.Form):
             "timestamp": self.data.get("timestamp", ""),
         }
         expected_hash = self.generate_security_hash(**security_hash_dict)
-        actual_hash = self.cleaned_data["security_hash"]
+        actual_hash: str = self.cleaned_data["security_hash"]
         if not constant_time_compare(expected_hash, actual_hash):
             raise forms.ValidationError("Security hash check failed.")
         return actual_hash
 
-    def clean_timestamp(self):
+    def clean_timestamp(self) -> int:
         """Make sure the timestamp isn't too far (default is > 2 hours) in the past."""
-        ts = self.cleaned_data["timestamp"]
+        ts: int = self.cleaned_data["timestamp"]
         if time.time() - ts > DEFAULT_COMMENTS_TIMEOUT:
             raise forms.ValidationError("Timestamp check failed")
         return ts
 
-    def generate_security_data(self):
+    def generate_security_data(self) -> dict[str, str]:
         """Generate a dict of security data for "initial" data."""
         timestamp = int(time.time())
-        security_dict = {
+        return {
             "content_type": str(self.target_object._meta),
             "object_pk": str(self.target_object._get_pk_val()),
             "timestamp": str(timestamp),
             "security_hash": self.initial_security_hash(timestamp),
         }
-        return security_dict
 
-    def initial_security_hash(self, timestamp):
+    def initial_security_hash(self, timestamp: int) -> str:
         """
         Generate the initial security hash from self.content_object
         and a (unix) timestamp.
@@ -88,12 +97,12 @@ class CommentSecurityForm(forms.Form):
         }
         return self.generate_security_hash(**initial_security_dict)
 
-    def generate_security_hash(self, content_type, object_pk, timestamp):
+    def generate_security_hash(self, content_type: str, object_pk: str, timestamp: str) -> str:
         """
         Generate a HMAC security hash from the provided info.
         """
         info = (content_type, object_pk, timestamp)
-        key_salt = "django.contrib.forms.CommentSecurityForm"
+        key_salt = "tree_comments.forms.CommentSecurityForm"
         value = "-".join(info)
         return salted_hmac(key_salt, value).hexdigest()
 
@@ -103,31 +112,36 @@ class CommentDetailsForm(CommentSecurityForm):
     Handles the specific details of the comment (name, comment, etc.).
     """
 
-    def __init__(self, target_object, parent=None, data=None, initial=None, **kwargs):
-        self.parent = parent
+    def __init__(
+        self,
+        target_object: Model,
+        parent: Model | None = None,
+        data: dict[str, Any] | None = None,
+        initial: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        self.parent = parent  # type: ignore[assignment]
         if initial is None:
             initial = {}
         if parent:
-            initial.update({"parent": self.parent.pk})
+            initial.update({"parent": parent.pk})
         super().__init__(target_object, data=data, initial=initial, **kwargs)
 
-    parent = forms.IntegerField(required=False, widget=forms.HiddenInput, label=_('Parent comment'))
+    parent = forms.IntegerField(required=False, widget=forms.HiddenInput, label=_("Parent comment"))
     name = forms.CharField(label=pgettext_lazy("Person name", "Name"), max_length=50)
     email = forms.EmailField(label=_("Email address"))
     url = forms.URLField(label=_("URL"), required=False, assume_scheme="https")
     # Translators: 'Comment' is a noun here.
-    comment = forms.CharField(
-        label=_("Comment"), widget=forms.Textarea, max_length=COMMENT_MAX_LENGTH
-    )
+    comment = forms.CharField(label=_("Comment"), widget=forms.Textarea, max_length=COMMENT_MAX_LENGTH)
 
-    def as_json(self):
+    def as_json(self) -> dict[str, Any]:
         """Return a JSON-serializable dict of initial values for all fields.
 
         Preference order per field:
         1) form instance initial (self.initial)
         2) field-level initial (field.initial)
         """
-        values = {}
+        values: dict[str, Any] = {}
         for name, field in self.fields.items():
             if name in self.initial:
                 val = self.initial.get(name)
@@ -143,7 +157,7 @@ class CommentDetailsForm(CommentSecurityForm):
             values[name] = val
         return values
 
-    def get_comment_object(self, site_id=None):
+    def get_comment_object(self, site_id: int | None = None) -> Model:
         """
         Return a new (unsaved) comment object based on the information in this
         form. Assumes that the form is already validated and will throw a
@@ -155,13 +169,11 @@ class CommentDetailsForm(CommentSecurityForm):
         if not self.is_valid():
             raise ValueError("get_comment_object may only be called on valid forms")
 
-        CommentModel = self.get_comment_model()
-        new = CommentModel(**self.get_comment_create_data(site_id=site_id))
-        new = self.check_for_duplicate_comment(new)
+        comment_model = self.get_comment_model()
+        new = comment_model(**self.get_comment_create_data(site_id=site_id))
+        return self.check_for_duplicate_comment(new)
 
-        return new
-
-    def get_comment_model(self):
+    def get_comment_model(self) -> type[Model]:
         """
         Get the comment model to create with this form. Subclasses in custom
         comment apps should override this, get_comment_create_data, and perhaps
@@ -169,27 +181,27 @@ class CommentDetailsForm(CommentSecurityForm):
         """
         return get_comment_model()
 
-    def get_comment_create_data(self, site_id=None):
+    def get_comment_create_data(self, site_id: int | None = None) -> dict[str, Any]:
         """
         Returns the dict of data to be used to create a comment. Subclasses in
         custom comment apps that override get_comment_model can override this
         method to add extra fields onto a custom comment model.
         """
-        return dict(
-            parent_id=self.cleaned_data["parent"],
-            content_type=ContentType.objects.get_for_model(self.target_object),
-            object_pk=force_str(self.target_object._get_pk_val()),
-            user_name=self.cleaned_data["name"],
-            user_email=self.cleaned_data["email"],
-            user_url=self.cleaned_data["url"],
-            comment=self.cleaned_data["comment"],
-            submit_date=timezone.now(),
-            site_id=site_id or getattr(settings, "SITE_ID", None),
-            is_public=True,
-            is_removed=False,
-        )
+        return {
+            "parent_id": self.cleaned_data["parent"],
+            "content_type": ContentType.objects.get_for_model(self.target_object),
+            "object_pk": force_str(self.target_object._get_pk_val()),
+            "user_name": self.cleaned_data["name"],
+            "user_email": self.cleaned_data["email"],
+            "user_url": self.cleaned_data["url"],
+            "comment": self.cleaned_data["comment"],
+            "submit_date": timezone.now(),
+            "site_id": site_id or getattr(settings, "SITE_ID", None),
+            "is_public": True,
+            "is_removed": False,
+        }
 
-    def check_for_duplicate_comment(self, new):
+    def check_for_duplicate_comment(self, new: Model) -> Model:
         """
         Check that a submitted comment isn't a duplicate. This might be caused
         by someone posting a comment twice. If it is a dup, silently return the *previous* comment.
@@ -198,57 +210,30 @@ class CommentDetailsForm(CommentSecurityForm):
             self.get_comment_model()
             ._default_manager.using(self.target_object._state.db)
             .filter(
-                content_type=new.content_type,
-                object_pk=new.object_pk,
-                user_name=new.user_name,
-                user_email=new.user_email,
-                user_url=new.user_url,
+                content_type=new.content_type,  # type: ignore[attr-defined]
+                object_pk=new.object_pk,  # type: ignore[attr-defined]
+                user_name=new.user_name,  # type: ignore[attr-defined]
+                user_email=new.user_email,  # type: ignore[attr-defined]
+                user_url=new.user_url,  # type: ignore[attr-defined]
             )
         )
         for old in possible_duplicates:
             if (
-                old.submit_date.date() == new.submit_date.date()
-                and old.comment == new.comment
+                old.submit_date.date() == new.submit_date.date()  # type: ignore[attr-defined]
+                and old.comment == new.comment  # type: ignore[attr-defined]
             ):
                 return old
 
         return new
 
-    def clean_comment(self):
-        """
-        If COMMENTS_ALLOW_PROFANITIES is False, check that the comment doesn't
-        contain anything in PROFANITIES_LIST.
-        """
-        comment = self.cleaned_data["comment"]
-        if not getattr(settings, "COMMENTS_ALLOW_PROFANITIES", False) and getattr(
-            settings, "PROFANITIES_LIST", False
-        ):
-            bad_words = [w for w in settings.PROFANITIES_LIST if w in comment.lower()]
-            if bad_words:
-                raise forms.ValidationError(
-                    ngettext(
-                        "Watch your mouth! The word %s is not allowed here.",
-                        "Watch your mouth! The words %s are not allowed here.",
-                        len(bad_words),
-                    )
-                    % get_text_list(
-                        [
-                            '"%s%s%s"' % (i[0], "-" * (len(i) - 2), i[-1])
-                            for i in bad_words
-                        ],
-                        gettext("and"),
-                    )
-                )
-        return comment
-
-    def clean_parent(self):
+    def clean_parent(self) -> int | None:
         """
         Validate the parent field.
         """
-        parent = self.cleaned_data["parent"]
+        parent: int | None = self.cleaned_data["parent"]
         if parent is not None:
             comment_model = get_comment_model()
-            if not comment_model.objects.filter(pk=parent).exists():
+            if not comment_model._default_manager.filter(pk=parent).exists():
                 raise forms.ValidationError(_("The parent comment does not exist."))
 
         return parent
@@ -257,14 +242,13 @@ class CommentDetailsForm(CommentSecurityForm):
 class CommentForm(CommentDetailsForm):
     honeypot = forms.CharField(
         required=False,
-        label=_(
-            "If you enter anything in this field your comment will be treated as spam"
-        ),
+        label=_("If you enter anything in this field your comment will be treated as spam"),
     )
 
-    def clean_honeypot(self):
+    def clean_honeypot(self) -> str:
         """Check that nothing's been entered into the honeypot."""
-        value = self.cleaned_data["honeypot"]
+        value: str = self.cleaned_data["honeypot"]
         if value:
-            raise forms.ValidationError(self.fields["honeypot"].label)
+            label = self.fields["honeypot"].label
+            raise forms.ValidationError(label or "")
         return value

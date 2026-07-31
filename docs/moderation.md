@@ -24,11 +24,7 @@ Users can flag comments for moderator review.
 ```python
 from tree_comments.models import CommentFlag
 
-flag = CommentFlag.objects.create(
-    user=request.user,
-    comment=comment,
-    flag=CommentFlag.SUGGEST_REMOVAL
-)
+flag = CommentFlag.objects.create(user=request.user, comment=comment, flag=CommentFlag.SUGGEST_REMOVAL)
 ```
 
 ## Moderator Actions
@@ -54,9 +50,10 @@ Configure email notifications for new comments:
 ```python
 from tree_comments.moderation import CommentModerator
 
+
 class MyModerator(CommentModerator):
     email_notification = True
-    auto_moderate_field = 'publish_date'
+    auto_moderate_field = "publish_date"
     moderate_after = 30  # days
 ```
 
@@ -76,14 +73,16 @@ Display moderation links:
 
 ## Views
 
-### FlagCommentView
+### FlagView
 
 Allows users to flag comments.
 
-### DeleteCommentView
+### DeleteView
 
-Allows moderators to delete comments (requires staff status).
+Allows moderators to delete comments (requires the
+`<app_label>.can_moderate` permission).
 
-### ApproveCommentView
+### ApproveView
 
-Allows moderators to approve comments (requires staff status).
+Allows moderators to approve comments (requires the
+`<app_label>.can_moderate` permission).

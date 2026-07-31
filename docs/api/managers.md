@@ -1,107 +1,113 @@
 # Managers API
 
-API reference for custom managers in Django Tree Comments.
+API reference for the comment queryset and manager in Django Tree Comments.
 
-## CommentManager
+## Overview
 
-The `CommentManager` provides methods for querying comments.
+`CommentManager` is built via
+[`Manager.from_queryset(CommentQuerySet)`](https://docs.djangoproject.com/en/stable/topics/db/managers/#from-queryset),
+so every queryset method is also available directly on the manager
+(`Comment.objects.visible()`, `Comment.objects.for_model(...)`, …).
 
-### Methods
+All tree-traversal methods are powered by
+[django-cte](https://github.com/dimagi/django-cte) recursive Common Table
+Expressions and work on **PostgreSQL, MySQL, and SQLite**.
 
-#### `cte_for_instance(object)`
+## QuerySet / Manager methods
 
-Get all comments for an object using Common Table Expressions for efficient tree queries.
+### `visible()`
 
-**Parameters:**
-- `object` - The object to get comments for
+Return only comments that are both public and not removed.
 
-**Returns:**
-- QuerySet of comments with `level` annotation for tree depth
+```python
+Comment.objects.visible()
+# equivalent: Comment.objects.filter(is_public=True, is_removed=False)
+```
 
-**Example:**
+### `roots()`
+
+Return only visible, top-level (parent-less) comments.
+
+### `in_moderation()`
+
+Return comments waiting in the moderation queue (not public, not removed).
+
+### `for_model(model)`
+
+Return all comments for a model class or instance.
+
+```python
+Comment.objects.for_model(Article)  # all comments on any Article
+Comment.objects.for_model(article)  # comments on one article instance
+```
+
+### `cte_for_instance(instance)`
+
+Fetch the **entire comment tree** for `instance` in a single recursive CTE
+query. Each comment is annotated with:
+
+- `depth` — nesting level (`0` for root comments)
+- `root_id` — the id of the top-level ancestor
 
 ```python
 from tree_comments.models import Comment
 
 comments = Comment.objects.cte_for_instance(article)
 for comment in comments:
-    print(f"{'  ' * comment.level}{comment.comment}")
+    print(f"{'  ' * comment.depth}{comment.comment}")
 ```
 
-#### `in_moderation()`
+### `threaded_for_instance(instance)`
 
-Get comments that are awaiting moderation.
-
-**Returns:**
-- QuerySet of non-public comments
-
-**Example:**
+Like `cte_for_instance`, but the result is ordered for threaded display
+(by descending `root_id`, then `submit_date`, then `id`) and uses
+`select_related("parent", "user", "content_type")` so rendering the tree
+in a template does not trigger N+1 queries.
 
 ```python
-pending = Comment.objects.in_moderation()
-```
-
-#### `for_model(model)`
-
-Get all comments for a specific model class.
-
-**Parameters:**
-- `model` - Model class or instance
-
-**Returns:**
-- QuerySet of comments
-
-**Example:**
-
-```python
-from myapp.models import Article
-
-comments = Comment.objects.for_model(Article)
+comments = Comment.objects.threaded_for_instance(article)
 ```
 
 ## Usage
 
-### Accessing the Manager
+### Accessing the manager
 
 ```python
 from tree_comments import get_comment_model
 
 Comment = get_comment_model()
-comments = Comment.objects.cte_for_instance(article)
+comments = Comment.objects.threaded_for_instance(article)
 ```
 
-### Custom Manager
+### Custom manager
 
-Create a custom manager by extending CommentManager:
+Because `CommentManager` is `from_queryset`-based, extend `CommentQuerySet`
+and generate a new manager:
 
 ```python
-from tree_comments.managers import CommentManager as BaseManager
+from django.db import models
+from tree_comments.managers import CommentQuerySet
 
-class CustomManager(BaseManager):
-    def approved(self):
-        return self.filter(is_public=True, is_removed=False)
 
+class CommentQuerySet(CommentQuerySet):
     def recent(self, days=7):
-        from django.utils import timezone
         from datetime import timedelta
+        from django.utils import timezone
+
         cutoff = timezone.now() - timedelta(days=days)
         return self.filter(submit_date__gte=cutoff)
+
+
+CommentManager = models.Manager.from_queryset(CommentQuerySet)
 ```
 
 ## Performance
 
-### CTE Queries
-
-The `cte_for_instance` method uses PostgreSQL CTE for efficient tree traversal:
-
-- Single query for entire comment tree
-- Includes `level` annotation for depth
-- Ordered by tree structure
-
-### Query Optimization
-
-Use `select_related` and `prefetch_related` for better performance:
+The recursive CTE fetches the whole tree in **one query**. Because
+`threaded_for_instance` already calls `select_related("parent", "user",
+"content_type")`, accessing those relations in a template does not add extra
+queries. You can chain additional `select_related` / `prefetch_related`:
 
 ```python
-comments = Comment.objects.cte_for_instance(article).select_related('user')
+comments = Comment.objects.cte_for_instance(article).select_related("user")
 ```

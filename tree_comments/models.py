@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -42,18 +44,12 @@ class AbstractComment(AbstractBaseComment):
     comment = models.TextField(_("comment"), max_length=COMMENT_MAX_LENGTH)
 
     # Metadata about the comment
-    submit_date = models.DateTimeField(
-        _("date/time submitted"), default=None, db_index=True
-    )
-    ip_address = models.GenericIPAddressField(
-        _("IP address"), unpack_ipv4=True, blank=True, null=True
-    )
+    submit_date = models.DateTimeField(_("date/time submitted"), default=None, db_index=True)
+    ip_address = models.GenericIPAddressField(_("IP address"), unpack_ipv4=True, blank=True, null=True)
     is_public = models.BooleanField(
         _("is public"),
         default=True,
-        help_text=_(
-            "Uncheck this box to make the comment effectively disappear from the site."
-        ),
+        help_text=_("Uncheck this box to make the comment effectively disappear from the site."),
     )
     is_removed = models.BooleanField(
         _("is removed"),
@@ -72,19 +68,19 @@ class AbstractComment(AbstractBaseComment):
     class Meta:
         abstract = True
         ordering = ("submit_date",)
-        permissions = [("can_moderate", "Can moderate comments")]
+        permissions = [("can_moderate", "Can moderate comments")]  # noqa: RUF012
         verbose_name = _("comment")
         verbose_name_plural = _("comments")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}: {self.comment[:50]}..."
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if self.submit_date is None:
             self.submit_date = timezone.now()
         super().save(*args, **kwargs)
 
-    def _get_userinfo(self):
+    def _get_userinfo(self) -> dict[str, str]:
         """
         Get a dictionary that pulls together information about the poster
         safely for both authenticated and non-authenticated comments.
@@ -92,21 +88,18 @@ class AbstractComment(AbstractBaseComment):
         This dict will have ``name``, ``email``, and ``url`` fields.
         """
         if not hasattr(self, "_userinfo"):
-            userinfo = {
+            userinfo: dict[str, str] = {
                 "name": self.user_name,
                 "email": self.user_email,
                 "url": self.user_url,
             }
-            if self.user_id:
-                u = self.user
+            u = self.user
+            if u is not None:
                 if u.email:
                     userinfo["email"] = u.email
 
-                # If the user has a full name, use that for the user name.
-                # However, a given user_name overrides the raw user.username,
-                # so only use that if this comment has no associated name.
                 if u.get_full_name():
-                    userinfo["name"] = self.user.get_full_name()
+                    userinfo["name"] = u.get_full_name()
                 elif not self.user_name:
                     userinfo["name"] = u.get_username()
             self._userinfo = userinfo
@@ -114,54 +107,38 @@ class AbstractComment(AbstractBaseComment):
 
     userinfo = property(_get_userinfo, doc=_get_userinfo.__doc__)
 
-    def _get_name(self):
-        return self.userinfo["name"]
+    def _get_name(self) -> str:
+        return self._get_userinfo()["name"]
 
-    def _set_name(self, val):
+    def _set_name(self, val: str) -> None:
         if self.user_id:
-            raise AttributeError(
-                _(
-                    "This comment was posted by an authenticated "
-                    "user and thus the name is read-only."
-                )
-            )
+            raise AttributeError(_("This comment was posted by an authenticated user and thus the name is read-only."))
         self.user_name = val
 
-    name = property(
-        _get_name, _set_name, doc="The name of the user who posted this comment"
-    )
+    name = property(_get_name, _set_name, doc="The name of the user who posted this comment")
 
-    def _get_email(self):
-        return self.userinfo["email"]
+    def _get_email(self) -> str:
+        return self._get_userinfo()["email"]
 
-    def _set_email(self, val):
+    def _set_email(self, val: str) -> None:
         if self.user_id:
-            raise AttributeError(
-                _(
-                    "This comment was posted by an authenticated "
-                    "user and thus the email is read-only."
-                )
-            )
+            raise AttributeError(_("This comment was posted by an authenticated user and thus the email is read-only."))
         self.user_email = val
 
-    email = property(
-        _get_email, _set_email, doc="The email of the user who posted this comment"
-    )
+    email = property(_get_email, _set_email, doc="The email of the user who posted this comment")
 
-    def _get_url(self):
-        return self.userinfo["url"]
+    def _get_url(self) -> str:
+        return self._get_userinfo()["url"]
 
-    def _set_url(self, val):
+    def _set_url(self, val: str) -> None:
         self.user_url = val
 
-    url = property(
-        _get_url, _set_url, doc="The URL given by the user who posted this comment"
-    )
+    url = property(_get_url, _set_url, doc="The URL given by the user who posted this comment")
 
-    def get_absolute_url(self, anchor_pattern="#c%(id)s"):
+    def get_absolute_url(self, anchor_pattern: str = "#c%(id)s") -> str:
         return self.get_content_object_url() + (anchor_pattern % self.__dict__)
 
-    def get_reply_url(self):
+    def get_reply_url(self) -> str:
         return (
             reverse(
                 "tree-comments-reply",
@@ -172,7 +149,7 @@ class AbstractComment(AbstractBaseComment):
             + f"?content_type={self.content_type.app_label}.{self.content_type.model}&object_pk={self.object_pk}"
         )
 
-    def get_as_text(self):
+    def get_as_text(self) -> str:
         """
         Return this comment as plain text.  Useful for emails.
         """
@@ -183,12 +160,7 @@ class AbstractComment(AbstractBaseComment):
             "domain": self.site.domain,
             "url": self.get_absolute_url(),
         }
-        return (
-            _(
-                "Posted by %(user)s at %(date)s\n\n%(comment)s\n\nhttp://%(domain)s%(url)s"
-            )
-            % d
-        )
+        return _("Posted by %(user)s at %(date)s\n\n%(comment)s\n\nhttp://%(domain)s%(url)s") % d
 
 
 class AbstractCommentFlag(models.Model):
@@ -213,18 +185,14 @@ class AbstractCommentFlag(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = [("user", "comment", "flag")]
+        unique_together = [("user", "comment", "flag")]  # noqa: RUF012
         verbose_name = _("comment flag")
         verbose_name_plural = _("comment flags")
 
-    def __str__(self):
-        return "%s flag of comment ID %s by %s" % (
-            self.flag,
-            self.comment_id,
-            self.user.get_username(),
-        )
+    def __str__(self) -> str:
+        return f"{self.flag} flag of comment ID {self.comment_id} by {self.user.get_username()}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if self.flag_date is None:
             self.flag_date = timezone.now()
         super().save(*args, **kwargs)

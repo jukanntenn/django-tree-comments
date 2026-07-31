@@ -32,7 +32,7 @@ SITE_ID = 1
 Custom comment model (default: `'tree_comments.Comment'`):
 
 ```python
-TREE_COMMENTS_COMMENT_MODEL = 'myapp.CustomComment'
+TREE_COMMENTS_COMMENT_MODEL = "myapp.CustomComment"
 ```
 
 ### `TREE_COMMENTS_COMMENT_FLAG_MODEL`
@@ -40,7 +40,7 @@ TREE_COMMENTS_COMMENT_MODEL = 'myapp.CustomComment'
 Custom comment flag model (default: `'tree_comments.CommentFlag'`):
 
 ```python
-TREE_COMMENTS_COMMENT_FLAG_MODEL = 'myapp.CustomCommentFlag'
+TREE_COMMENTS_COMMENT_FLAG_MODEL = "myapp.CustomCommentFlag"
 ```
 
 ### `TREE_COMMENTS_COMMENT_FORM`
@@ -48,7 +48,7 @@ TREE_COMMENTS_COMMENT_FLAG_MODEL = 'myapp.CustomCommentFlag'
 Custom comment form (default: `'tree_comments.forms.CommentForm'`):
 
 ```python
-TREE_COMMENTS_COMMENT_FORM = 'myapp.forms.CustomCommentForm'
+TREE_COMMENTS_COMMENT_FORM = "myapp.forms.CustomCommentForm"
 ```
 
 ## Comment Settings
@@ -75,25 +75,4 @@ Hide removed comments from list (default: `True`):
 
 ```python
 COMMENTS_HIDE_REMOVED = True
-```
-
-### `COMMENTS_ALLOW_PROFANITIES`
-
-Allow profanities in comments (default: `False`):
-
-```python
-COMMENTS_ALLOW_PROFANITIES = False
-```
-
-## Profanity Filter
-
-### `PROFANITIES_LIST`
-
-Custom list of profane words:
-
-```python
-PROFANITIES_LIST = [
-    'badword1',
-    'badword2',
-]
 ```

@@ -1,0 +1,49 @@
+/* ==========================================================================
+   django-tree-comments · example · rich-text styles for comment bodies
+   Applied to the .tc-body container.
+   ========================================================================== */
+
+.tc-body > *:first-child { margin-top: 0; }
+.tc-body > *:last-child { margin-bottom: 0; }
+.tc-body p { margin: 0 0 var(--tc-sp-4); }
+
+.tc-body h1, .tc-body h2, .tc-body h3, .tc-body h4, .tc-body h5, .tc-body h6 {
+  margin: var(--tc-sp-6) 0 var(--tc-sp-3); font-weight: var(--tc-fw-semibold); line-height: var(--tc-lh-tight);
+}
+.tc-body h1 { font-size: var(--tc-fs-xl); }
+.tc-body h2 { font-size: var(--tc-fs-lg); }
+.tc-body h3 { font-size: var(--tc-fs-md); }
+.tc-body h4, .tc-body h5, .tc-body h6 { font-size: var(--tc-fs-base); }
+
+.tc-body ul, .tc-body ol { margin: 0 0 var(--tc-sp-4); padding-left: var(--tc-sp-7); }
+.tc-body li { margin-bottom: var(--tc-sp-2); }
+.tc-body li:last-child { margin-bottom: 0; }
+
+.tc-body blockquote {
+  margin: 0 0 var(--tc-sp-4);
+  padding: var(--tc-sp-2) var(--tc-sp-4);
+  border-left: 3px solid var(--tc-color-quote-border);
+  background: var(--tc-color-quote-bg);
+  color: var(--tc-color-text-secondary);
+  border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0;
+}
+
+.tc-body code {
+  font-family: var(--tc-font-mono); font-size: 0.85em;
+  padding: 0.125em 0.375em; background: var(--tc-color-surface);
+  border-radius: var(--tc-radius-sm);
+}
+.tc-body pre {
+  margin: 0 0 var(--tc-sp-4); padding: var(--tc-sp-4);
+  background: var(--tc-color-surface); border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-md); overflow-x: auto;
+}
+.tc-body pre code { padding: 0; background: transparent; font-size: var(--tc-fs-sm); }
+
+.tc-body a { word-break: break-word; }
+.tc-body hr { margin: var(--tc-sp-6) 0; border: none; border-top: 1px solid var(--tc-color-border); }
+.tc-body img { max-width: 100%; height: auto; border-radius: var(--tc-radius-sm); }
+
+.tc-body table { width: 100%; margin: 0 0 var(--tc-sp-4); border-collapse: collapse; font-size: var(--tc-fs-sm); }
+.tc-body th, .tc-body td { padding: var(--tc-sp-2) var(--tc-sp-3); border: 1px solid var(--tc-color-border); text-align: left; }
+.tc-body th { background: var(--tc-color-surface); font-weight: var(--tc-fw-semibold); }

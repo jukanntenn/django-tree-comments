@@ -1,18 +1,19 @@
 {% extends "blog/base.html" %}
-{% block title %}
-  Home
-{% endblock title %}
+{% load i18n %}
+{% block title %}posts — custom comment model{% endblock %}
 {% block content %}
-  {% if posts %}
+    <h1>Posts</h1>
+    <p class="intro">
+        {% trans "This demo uses a swappable comment model (comments.Comment) configured via TREE_COMMENTS_COMMENT_MODEL, with the same modern UI but a traditional (non-HTMX) comment flow." %}
+    </p>
     <ul class="post-list">
-      {% for post in posts %}
-        <li class="post-item">
-          <a href="{% url 'blog-detail' post.pk %}"><strong>{{ post.title }}</strong></a>
-          <div class="post-meta">{{ post.author }} · {{ post.created_at | date:"Y-m-d H:i:s" }}</div>
-        </li>
-      {% endfor %}
+        {% for post in posts %}
+            <li class="post-list-item">
+                <a href="{% url 'blog-detail' post.pk %}" class="post-list-link">
+                    <span class="post-list-title">{{ post.title }}</span>
+                </a>
+                <span class="post-list-meta">{{ post.created_at|date:"Y-m-d" }}</span>
+            </li>
+        {% endfor %}
     </ul>
-  {% else %}
-    <p>No posts yet.</p>
-  {% endif %}
-{% endblock content %}
+{% endblock %}

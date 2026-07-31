@@ -42,29 +42,33 @@ def cte_for_instance(self, object):
     """
     Get comments using Common Table Expression.
 
-    Returns comments with 'level' annotation for tree depth.
+    Returns comments with 'depth' annotation for tree depth
+    and 'root_id' for the top-level ancestor.
     Uses WITH RECURSIVE for efficient tree traversal.
     """
 ```
 
-**SQL Generated:**
+**SQL (simplified):**
 
 ```sql
 WITH RECURSIVE tree AS (
     -- Base case: root comments
-    SELECT id, parent_id, comment, 0 as level
-    FROM comments
+    SELECT id, parent_id, comment, id AS root_id, 0 AS depth
+    FROM tree_comments_comment
     WHERE object_pk = %s AND parent_id IS NULL
 
     UNION ALL
 
     -- Recursive case: child comments
-    SELECT c.id, c.parent_id, c.comment, tree.level + 1
-    FROM comments c
+    SELECT c.id, c.parent_id, c.comment, tree.root_id, tree.depth + 1
+    FROM tree_comments_comment c
     INNER JOIN tree ON c.parent_id = tree.id
 )
-SELECT * FROM tree ORDER BY level, id;
+SELECT * FROM tree;
 ```
+
+> The recursive CTE works on **PostgreSQL, MySQL, and SQLite** (all support
+> `WITH RECURSIVE`).
 
 ### Views
 
@@ -87,7 +91,7 @@ Views check `Accept` header and return JSON when appropriate:
 
 ```python
 def dispatch(self, request, *args, **kwargs):
-    if request.headers.get('Accept') == 'application/json':
+    if request.headers.get("Accept") == "application/json":
         return self.json_response()
     return super().dispatch(request, *args, **kwargs)
 ```
@@ -139,7 +143,7 @@ Using CTE for efficient tree queries:
 
 1. **Root Comments** - Comments with `parent_id = NULL`
 2. **Child Comments** - Comments with `parent_id` set
-3. **Level Calculation** - Computed during CTE traversal
+3. **Depth Calculation** - Computed during CTE traversal (annotated as `depth`)
 
 ### Performance
 
@@ -228,7 +232,7 @@ Uses Django's app registry:
 
 ```python
 def get_comment_model():
-    setting = getattr(settings, 'TREE_COMMENTS_COMMENT_MODEL', 'tree_comments.Comment')
+    setting = getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment")
     return apps.get_model(setting)
 ```
 
