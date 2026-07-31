@@ -1,0 +1,86 @@
+# prek configuration (native prek TOML format; not compatible with upstream pre-commit).
+# Usage:
+#   prek install              # first time, write git hooks shim
+#   git commit ...            # auto-triggered afterwards
+#   prek run --all-files      # manual full run
+#   prek run ruff             # run a single hook (by id)
+#   SKIP=ruff git commit ...  # skip a single hook
+#   prek update               # bump every rev to the latest tag
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+    { id = "trailing-whitespace" },
+    { id = "end-of-file-fixer" },
+    { id = "check-yaml", args = ["--allow-multiple-documents"] },
+    { id = "check-toml" },
+    { id = "check-json" },
+    { id = "check-merge-conflict" },
+    { id = "check-added-large-files", args = ["--maxkb=500"] },
+    { id = "mixed-line-ending", args = ["--fix=lf"] },
+    { id = "detect-private-key" },
+]
+
+[[repos]]
+repo = "https://github.com/astral-sh/ruff-pre-commit"
+rev = "v0.16.0"
+hooks = [
+    { id = "ruff", args = ["--fix"], exclude = { glob = "**/migrations/**" } },
+    { id = "ruff-format", exclude = { glob = "**/migrations/**" } },
+]
+
+[[repos]]
+repo = "https://github.com/djlint/djLint"
+rev = "v1.42.3"
+hooks = [
+    { id = "djlint-reformat-django", types = ["html"], exclude = { glob = ["examples/**"] } },
+    { id = "djlint-django", types = ["html"], args = ["--lint", "--configuration=pyproject.toml"], exclude = { glob = ["examples/**"] } },
+]
+
+[[repos]]
+repo = "https://github.com/tox-dev/pyproject-fmt"
+rev = "v2.25.3"
+hooks = [
+    { id = "pyproject-fmt" },
+]
+
+[[repos]]
+repo = "https://github.com/adamchainz/django-upgrade"
+rev = "1.31.1"
+hooks = [
+    { id = "django-upgrade", args = ["--target-version", "5.2"], exclude = { glob = "**/migrations/**" } },
+]
+
+[[repos]]
+repo = "https://github.com/pre-commit/mirrors-mypy"
+rev = "v2.3.0"
+hooks = [
+    {
+        id = "mypy",
+        # The django-stubs plugin imports every INSTALLED_APPS model on init,
+        # so the isolated env must include runtime deps (django / django-cte);
+        # otherwise it raises
+        # "Error constructing plugin instance of NewSemanalDjangoPlugin".
+        additional_dependencies = [
+            "django-stubs[compatible-mypy]>=6.0.7",
+            "django>=5.2",
+            "django-cte>=2",
+        ],
+        args = ["--strict", "--config-file=pyproject.toml"],
+        exclude = { glob = ["tests/**", "examples/**", "migrations/**", "docs/**", "perf/**"] },
+    },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+    {
+        id = "agents-claude-sync",
+        name = "AGENTS.md / CLAUDE.md in sync",
+        language = "system",
+        entry = "bash -c 'diff -q AGENTS.md CLAUDE.md || (echo \"AGENTS.md and CLAUDE.md differ — keep them byte-identical\" && exit 1)'",
+        pass_filenames = false,
+        files = { glob = ["AGENTS.md", "CLAUDE.md"] },
+    },
+]

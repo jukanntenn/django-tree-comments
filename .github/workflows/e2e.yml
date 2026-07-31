@@ -1,0 +1,57 @@
+name: E2E
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tree_comments/**'
+      - 'e2e/**'
+      - 'examples/**'
+      - 'pyproject.toml'
+  pull_request:
+    paths:
+      - 'tree_comments/**'
+      - 'e2e/**'
+      - 'examples/**'
+      - 'pyproject.toml'
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            e2e/node_modules
+          key: ${{ runner.os }}-playwright-${{ hashFiles('e2e/package-lock.json') }}
+      - name: Install e2e deps
+        run: cd e2e && npm ci && npx playwright install --with-deps chromium
+      - name: Start PostgreSQL
+        run: docker compose -f e2e/docker-compose.yml up -d postgres
+      - name: Setup DB
+        run: bash e2e/setup-db.sh
+      - name: Run e2e
+        run: cd e2e && npm test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-artifacts
+          path: |
+            e2e/test-results/
+            e2e/playwright-report/
+          retention-days: 7

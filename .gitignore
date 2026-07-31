@@ -52,8 +52,13 @@ coverage.xml
 .pytest_cache/
 
 # Translations
-*.mo
+# Note: compiled .mo files MUST ship with the package (Django reads only .mo
+#       at runtime). .mo is produced by gettext and is committed to the repo
+#       by convention (see django-contrib-comments). Only .pot is ignored.
 *.pot
+
+# Editor backup files (e.g. .po~ produced by msgmerge/msgcat)
+*~
 
 # Django stuff:
 *.log
@@ -129,3 +134,25 @@ dmypy.json
 .pyre/
 
 .idea/
+
+.trae/documents
+
+# Perf harness reports (benchmarks archive to perf/reports/)
+perf/reports/
+
+# pytest-benchmark baselines (--benchmark-save archives to perf/.benchmarks/)
+perf/.benchmarks/
+
+.local/
+
+# AI agent session plans (per-session scratch notes, not version-controlled)
+.zcode/plans/
+
+# e2e (Playwright TS)
+e2e/node_modules/
+e2e/playwright-report/
+e2e/test-results/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

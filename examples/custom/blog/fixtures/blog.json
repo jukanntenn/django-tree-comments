@@ -1,0 +1,203 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "title": "Custom comment model demo",
+      "body": "This post uses a swappable comment model (comments.Comment) configured via TREE_COMMENTS_COMMENT_MODEL.",
+      "created_at": "2026-01-01T09:00:00Z",
+      "enable_comments": true,
+      "author": 1
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 1,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "demo_user",
+      "user_email": "demo@example.com",
+      "user_url": "",
+      "comment": "First! The custom model swap worked without a hitch.",
+      "submit_date": "2026-01-01T09:30:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 2,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": 1,
+      "user": null,
+      "user_name": "another_user",
+      "user_email": "another@example.com",
+      "user_url": "",
+      "comment": "Reply: same here, swapping the model was the easiest part.",
+      "submit_date": "2026-01-01T09:45:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 3,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "curious_dev",
+      "user_email": "curious@example.com",
+      "user_url": "",
+      "comment": "Does the custom model inherit all the manager methods like threaded_for_instance?",
+      "submit_date": "2026-01-01T10:00:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 4,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": 3,
+      "user": null,
+      "user_name": "maintainer",
+      "user_email": "maint@example.com",
+      "user_url": "",
+      "comment": "Yes, AbstractComment wires objects = CommentManager(), so all queryset methods are inherited.",
+      "submit_date": "2026-01-01T10:15:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 5,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "neo",
+      "user_email": "neo@example.com",
+      "user_url": "",
+      "comment": "There is no spoon, but there is a recursive CTE.",
+      "submit_date": "2026-01-01T10:30:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 6,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "qa_hat",
+      "user_email": "qa@example.com",
+      "user_url": "",
+      "comment": "Marking this thread as a good integration-test fixture.",
+      "submit_date": "2026-01-01T10:45:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 7,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": 6,
+      "user": null,
+      "user_name": "devops_dan",
+      "user_email": "dan@example.com",
+      "user_url": "",
+      "comment": "Agreed, very reusable.",
+      "submit_date": "2026-01-01T11:00:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 8,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "latecomer",
+      "user_email": "late@example.com",
+      "user_url": "",
+      "comment": "Just discovered this package. The swappable model is a killer feature.",
+      "submit_date": "2026-01-01T11:15:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 9,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": 8,
+      "user": null,
+      "user_name": "welcome_wagon",
+      "user_email": "welcome@example.com",
+      "user_url": "",
+      "comment": "Welcome! Check the main 'default' example for the HTMX integration.",
+      "submit_date": "2026-01-01T11:30:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  },
+  {
+    "model": "comments.comment",
+    "pk": 10,
+    "fields": {
+      "content_type": ["blog", "post"],
+      "object_pk": "1",
+      "site": 1,
+      "parent": null,
+      "user": null,
+      "user_name": "the_end",
+      "user_email": "end@example.com",
+      "user_url": "",
+      "comment": "Last comment in the fixture. Everything works end-to-end.",
+      "submit_date": "2026-01-01T11:45:00Z",
+      "ip_address": null,
+      "is_public": true,
+      "is_removed": false
+    }
+  }
+]

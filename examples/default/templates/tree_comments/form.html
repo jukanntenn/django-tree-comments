@@ -1,0 +1,38 @@
+{% load tree_comments i18n %}
+<form action="{% comment_form_target %}?format=html"
+      method="post"
+      id="comment-form"
+      class="tc-composer"
+      hx-post="{% comment_form_target %}?format=html"
+      hx-target="#comments-threaded"
+      hx-swap="afterbegin">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  {% for field in form %}
+    {% if field.is_hidden %}
+      {{ field }}
+    {% elif field.name == "honeypot" %}
+      <div style="display:none" aria-hidden="true">{{ field.label_tag }} {{ field }}</div>
+    {% else %}
+      <div class="tc-field{% if field.errors %} tc-field--error{% endif %}">
+        {% if field.name != "comment" %}
+          <label class="tc-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% endif %}
+        {{ field }}
+        {% if field.errors %}
+          {% for error in field.errors %}<span class="tc-field-error">{{ error }}</span>{% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+  <div class="tc-composer__footer">
+    <span class="tc-charcount"
+          data-charcount
+          data-maxlength="{{ form.fields.comment.max_length|default:3000 }}"
+          aria-live="polite"></span>
+    <div class="tc-composer__actions">
+      <button type="submit" name="preview" class="tc-btn tc-btn--secondary" value="Preview">{% trans "Preview" %}</button>
+      <button type="submit" name="post" class="tc-btn tc-btn--primary">{% trans "Comment" %}</button>
+    </div>
+  </div>
+</form>

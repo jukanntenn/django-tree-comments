@@ -1,0 +1,8 @@
+{% extends "tree_comments/base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Reply to user's comment" %}.
+{% endblock title %}
+{% block content %}
+    {% include "tree_comments/form.html" %}
+{% endblock content %}

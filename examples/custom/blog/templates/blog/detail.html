@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+{% load tree_comments blog_tags i18n %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+    <article class="post">
+        <h1>{{ post.title }}</h1>
+        <div class="post-body">{{ post.body|linebreaksbr }}</div>
+    </article>
+    <section class="comments-section">
+        {% get_comment_form for post as form %}
+        {% with nested=post|build_nested_for_post %}
+            {% include "tree_comments/app.html" %}
+        {% endwith %}
+    </section>
+{% endblock %}

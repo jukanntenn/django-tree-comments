@@ -1,0 +1,81 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "runserver (hot reload)",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "python", "manage.py", "runserver", "127.0.0.1:8000"],
+      "options": { "cwd": "${workspaceFolder}/examples/default" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "django",
+        "pattern": { "regexp": "^(.*)$", "file": 1, "message": 1 },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Watching for file changes with StatReloader",
+          "endsPattern": "Starting development server at"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "migrate",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "python", "manage.py", "migrate"],
+      "options": { "cwd": "${workspaceFolder}/examples/default" },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "seed comments",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "python", "manage.py", "seed_comments"],
+      "options": { "cwd": "${workspaceFolder}/examples/default" },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "pytest (unit)",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pytest", "-m", "not e2e"],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "e2e: setup + test",
+      "type": "shell",
+      "command": "bash e2e/setup-db.sh && cd e2e && npm test",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "lint (prek)",
+      "type": "shell",
+      "command": "prek",
+      "args": ["run", "--all-files"],
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "typecheck (mypy)",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "mypy", "tree_comments"],
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "mkdocs serve",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "mkdocs", "serve", "-a", "127.0.0.1:8001"],
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": { "regexp": "^(.*)$" },
+        "background": {
+          "activeOnStart": true,
+          "endsPattern": "Serving on http://127.0.0.1:8001"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    }
+  ]
+}

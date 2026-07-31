@@ -1,0 +1,194 @@
+/* ==========================================================================
+   django-tree-comments · example · Design Tokens
+   All visual variables are centralized here: colors, spacing, radii, fonts, shadows.
+   Component styles in comments.css reference only these tokens, never raw color values.
+   ========================================================================== */
+
+.tc-tree-comments {
+  /* —— Font families —— */
+  --tc-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", Arial, sans-serif;
+  --tc-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* —— Font-size scale —— */
+  --tc-fs-xs: 0.75rem;
+  --tc-fs-sm: 0.8125rem;
+  --tc-fs-base: 0.9375rem;
+  --tc-fs-md: 1rem;
+  --tc-fs-lg: 1.125rem;
+  --tc-fs-xl: 1.5rem;
+
+  --tc-lh-tight: 1.25;
+  --tc-lh-normal: 1.5;
+  --tc-lh-relaxed: 1.65;
+
+  --tc-fw-normal: 400;
+  --tc-fw-medium: 500;
+  --tc-fw-semibold: 600;
+  --tc-fw-bold: 700;
+
+  /* —— Spacing scale —— */
+  --tc-sp-0: 0;
+  --tc-sp-1: 0.125rem;
+  --tc-sp-2: 0.25rem;
+  --tc-sp-3: 0.375rem;
+  --tc-sp-4: 0.5rem;
+  --tc-sp-5: 0.75rem;
+  --tc-sp-6: 1rem;
+  --tc-sp-7: 1.25rem;
+  --tc-sp-8: 1.5rem;
+  --tc-sp-9: 2rem;
+  --tc-sp-10: 2.5rem;
+
+  --tc-radius-sm: 4px;
+  --tc-radius-md: 8px;
+  --tc-radius-lg: 12px;
+  --tc-radius-pill: 9999px;
+
+  --tc-indent: 1.75rem;
+  --tc-guide-gap: 0.875rem;
+
+  --tc-avatar-size: 2.25rem;
+  --tc-avatar-size-sm: 1.75rem;
+  --tc-avatar-size-xs: 1.25rem;
+
+  --tc-transition-fast: 120ms ease;
+  --tc-transition: 180ms ease;
+
+  --tc-focus-ring: 0 0 0 3px var(--tc-color-focus);
+
+  /* ===== Light theme (default) ===== */
+  --tc-color-bg: #ffffff;
+  --tc-color-surface: #f7f8fa;
+  --tc-color-surface-hover: #eef0f3;
+  --tc-color-border: #d8dde3;
+  --tc-color-border-strong: #c4cbd4;
+  --tc-color-rule: #e3e7ec;
+
+  --tc-color-text: #1c2026;
+  --tc-color-text-secondary: #5a6470;
+  --tc-color-text-muted: #8a94a3;
+  --tc-color-text-on-primary: #ffffff;
+
+  --tc-color-primary: #2563eb;
+  --tc-color-primary-hover: #1d4ed8;
+  --tc-color-primary-subtle: #eff4ff;
+
+  --tc-color-danger: #dc2626;
+  --tc-color-danger-hover: #b91c1c;
+  --tc-color-danger-subtle: #fef2f2;
+
+  --tc-color-success: #16a34a;
+  --tc-color-warning: #d97706;
+
+  --tc-color-op: #9333ea;
+  --tc-color-op-subtle: #faf5ff;
+
+  --tc-color-link: #2563eb;
+  --tc-color-link-hover: #1d4ed8;
+
+  --tc-color-quote-bg: #f3f5f8;
+  --tc-color-quote-border: #c4cbd4;
+  --tc-color-highlight: #fef08a;
+  --tc-color-focus: rgba(37, 99, 235, 0.35);
+
+  --tc-color-input-bg: #ffffff;
+  --tc-color-input-border: #c4cbd4;
+  --tc-color-input-border-focus: #2563eb;
+
+  --tc-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --tc-shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+  --tc-shadow-lg: 0 8px 24px rgba(16, 24, 40, 0.12);
+
+  /* —— Avatar color palette (8 colors) —— */
+  --tc-avatar-1-bg: #6366f1; --tc-avatar-1-fg: #ffffff;
+  --tc-avatar-2-bg: #0ea5e9; --tc-avatar-2-fg: #ffffff;
+  --tc-avatar-3-bg: #10b981; --tc-avatar-3-fg: #ffffff;
+  --tc-avatar-4-bg: #f59e0b; --tc-avatar-4-fg: #ffffff;
+  --tc-avatar-5-bg: #ef4444; --tc-avatar-5-fg: #ffffff;
+  --tc-avatar-6-bg: #ec4899; --tc-avatar-6-fg: #ffffff;
+  --tc-avatar-7-bg: #8b5cf6; --tc-avatar-7-fg: #ffffff;
+  --tc-avatar-8-bg: #14b8a6; --tc-avatar-8-fg: #ffffff;
+}
+
+/* ===== Dark theme (follows system) ===== */
+@media (prefers-color-scheme: dark) {
+  .tc-tree-comments:not(.tc-theme-light) {
+    --tc-color-bg: #0f1419;
+    --tc-color-surface: #161b22;
+    --tc-color-surface-hover: #1c232c;
+    --tc-color-border: #2a323c;
+    --tc-color-border-strong: #3a444f;
+    --tc-color-rule: #232a33;
+
+    --tc-color-text: #e6edf3;
+    --tc-color-text-secondary: #9aa6b2;
+    --tc-color-text-muted: #6b7684;
+    --tc-color-text-on-primary: #ffffff;
+
+    --tc-color-primary: #3b82f6;
+    --tc-color-primary-hover: #60a5fa;
+    --tc-color-primary-subtle: #1a2536;
+
+    --tc-color-danger: #f87171;
+    --tc-color-danger-hover: #fca5a5;
+    --tc-color-danger-subtle: #2a1517;
+
+    --tc-color-op: #c084fc;
+    --tc-color-op-subtle: #241a33;
+
+    --tc-color-link: #60a5fa;
+    --tc-color-link-hover: #93c5fd;
+
+    --tc-color-quote-bg: #1a2029;
+    --tc-color-quote-border: #3a444f;
+    --tc-color-highlight: #a16207;
+    --tc-color-focus: rgba(96, 165, 250, 0.4);
+
+    --tc-color-input-bg: #0d1117;
+    --tc-color-input-border: #3a444f;
+    --tc-color-input-border-focus: #3b82f6;
+
+    --tc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --tc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --tc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+    --tc-avatar-4-bg: #d97706; --tc-avatar-4-fg: #ffffff;
+  }
+}
+
+/* ===== Explicit dark ===== */
+.tc-tree-comments.tc-theme-dark {
+  --tc-color-bg: #0f1419;
+  --tc-color-surface: #161b22;
+  --tc-color-surface-hover: #1c232c;
+  --tc-color-border: #2a323c;
+  --tc-color-border-strong: #3a444f;
+  --tc-color-rule: #232a33;
+  --tc-color-text: #e6edf3;
+  --tc-color-text-secondary: #9aa6b2;
+  --tc-color-text-muted: #6b7684;
+  --tc-color-text-on-primary: #ffffff;
+  --tc-color-primary: #3b82f6;
+  --tc-color-primary-hover: #60a5fa;
+  --tc-color-primary-subtle: #1a2536;
+  --tc-color-danger: #f87171;
+  --tc-color-danger-hover: #fca5a5;
+  --tc-color-danger-subtle: #2a1517;
+  --tc-color-op: #c084fc;
+  --tc-color-op-subtle: #241a33;
+  --tc-color-link: #60a5fa;
+  --tc-color-link-hover: #93c5fd;
+  --tc-color-quote-bg: #1a2029;
+  --tc-color-quote-border: #3a444f;
+  --tc-color-highlight: #a16207;
+  --tc-color-focus: rgba(96, 165, 250, 0.4);
+  --tc-color-input-bg: #0d1117;
+  --tc-color-input-border: #3a444f;
+  --tc-color-input-border-focus: #3b82f6;
+  --tc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --tc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --tc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

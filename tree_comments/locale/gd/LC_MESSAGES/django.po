@@ -1,0 +1,327 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Translators:
+# GunChleoc, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: django-tree-comments\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
+"PO-Revision-Date: 2017-09-22 17:55+0000\n"
+"Last-Translator: GunChleoc\n"
+"Language-Team: Gaelic, Scottish (http://www.transifex.com/django/django-contrib-comments/language/gd/)\n"
+"Language: gd\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;\n"
+
+#: tree_comments/admin.py:24
+msgid "Content"
+msgstr "Susbaint"
+
+#: tree_comments/admin.py:28
+msgid "Metadata"
+msgstr "Meata-dàta"
+
+#: tree_comments/admin.py:71
+msgid "Flag selected comments"
+msgstr "Cuir bratach ris na beachdan a thagh thu"
+
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: tree_comments/admin.py:94
+msgid "Approve selected comments"
+msgstr "Aontaich ris na beachdan a thagh thu"
+
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: tree_comments/admin.py:120
+msgid "Remove selected comments"
+msgstr "Thoir na beachdan a thagh thu air falbh"
+
+#: tree_comments/admin.py:137
+#, python-format
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "seòrsa na susbainte"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "ID an oibseict"
+
+#: tree_comments/feeds.py:16
+#, python-format
+msgid "%(site_name)s comments"
+msgstr "Beachdan air %(site_name)s"
+
+#: tree_comments/feeds.py:22
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr "Na beachdan as ùire air %(site_name)s"
+
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
+msgctxt "Person name"
+msgid "Name"
+msgstr "Ainm"
+
+#: tree_comments/forms.py:117
+msgid "Email address"
+msgstr "Seòladh puist-d"
+
+#: tree_comments/forms.py:118
+msgid "URL"
+msgstr "URL"
+
+#: tree_comments/forms.py:121
+msgid "Comment"
+msgstr "Beachd"
+
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
+
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
+msgstr "Ma chuireas tu dad a-steach dhan raon seo, saoilidh sinn gur e spama a tha sa bheachd agad"
+
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
+
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
+
+#: tree_comments/models.py:32 tree_comments/models.py:197
+msgid "user"
+msgstr "cleachdaiche"
+
+#: tree_comments/models.py:38
+msgid "user's name"
+msgstr "ainm a' chleachdaiche"
+
+#: tree_comments/models.py:39
+msgid "user's email address"
+msgstr "seòladh puist-d a' chleachdaiche"
+
+#: tree_comments/models.py:40
+msgid "user's URL"
+msgstr "URL a' chleachdaiche"
+
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
+msgid "comment"
+msgstr "beachd"
+
+#: tree_comments/models.py:46
+msgid "date/time submitted"
+msgstr "ceann-là/àm a chaidh a chur a-nall"
+
+#: tree_comments/models.py:49
+msgid "IP address"
+msgstr "Seòladh IP"
+
+#: tree_comments/models.py:52
+msgid "is public"
+msgstr "tha e poblach"
+
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
+msgstr "Thoir a' chromag far a' bhogsa seo ach nach bi am beachd ri fhaicinn air an làrach tuilleadh."
+
+#: tree_comments/models.py:59
+msgid "is removed"
+msgstr "chaidh a thoirt air falbh"
+
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
+msgstr "Cuir cromag sa bhogsa seo mur eil am beachd iomchaidh. Thèid teachdaireachd gun deach a thoirt air falbh a shealltainn 'na àite."
+
+#: tree_comments/models.py:77
+msgid "comments"
+msgstr "beachdan"
+
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr "Chaidh am beachd seo a phostadh le cleachdaiche dearbhte agus cha ghabh an t-ainm ach leughadh."
+
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr "Chaidh am beachd seo a phostadh le cleachdaiche dearbhte agus cha ghabh am post-d ach leughadh."
+
+#: tree_comments/models.py:188
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+"Air a phostadh le %(user)s %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+
+#: tree_comments/models.py:207
+msgid "flag"
+msgstr "bratach"
+
+#: tree_comments/models.py:208
+msgid "date"
+msgstr "ceann-là"
+
+#: tree_comments/models.py:217
+msgid "comment flag"
+msgstr "bratach beachd"
+
+#: tree_comments/models.py:218
+msgid "comment flags"
+msgstr "brataich beachd"
+
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr "[%(site)s] Chaidh beachd ùr a phostadh air \"%(object)s\""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
+msgid "Approve a comment"
+msgstr "Aontaich ri beachd"
+
+#: tree_comments/templates/tree_comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr "A bheil thu airson am beachd seo fhoillseachadh?"
+
+#: tree_comments/templates/tree_comments/approve.html:13
+msgid "Approve"
+msgstr "Aontaich ris"
+
+#: tree_comments/templates/tree_comments/approved.html:4
+msgid "Thanks for approving"
+msgstr "Mòran taing airson aontachadh ris"
+
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
+msgstr "Mòran taing airson cur ri càileachd na deasbaireachd air an làrach againn"
+
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
+msgid "Remove a comment"
+msgstr "Thoir beachd air falbh"
+
+#: tree_comments/templates/tree_comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr "A bheil thu cinnteach gu bheil thu airson am beachd seo a thoirt air falbh?"
+
+#: tree_comments/templates/tree_comments/delete.html:19
+msgid "Remove"
+msgstr "Thoir air falbh e"
+
+#: tree_comments/templates/tree_comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Mòran taing airson a thoirt air falbh"
+
+#: tree_comments/templates/tree_comments/flag.html:4
+msgid "Flag this comment"
+msgstr "Cuir bratach ris a' bheachd seo"
+
+#: tree_comments/templates/tree_comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr "A bheil thu cinnteach gu bheil thu airson bratach a chur ris a' bheachd seo?"
+
+#: tree_comments/templates/tree_comments/flag.html:19
+msgid "Flag"
+msgstr "Cuir bratach ris"
+
+#: tree_comments/templates/tree_comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Mòran taing airson bratach a chur ris"
+
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
+msgid "Post"
+msgstr "Postaich"
+
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
+msgid "Preview"
+msgstr "Ro-sheall"
+
+#: tree_comments/templates/tree_comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr "Mòran taing airson beachd a chur a-null"
+
+#: tree_comments/templates/tree_comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr "Mòran taing airson do bheachd"
+
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
+msgid "Preview your comment"
+msgstr "Ro-sheall do bheachd"
+
+#: tree_comments/templates/tree_comments/preview.html:17
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] "Feuch an ceartaich thu a' mhearachd gu h-ìosal"
+msgstr[1] "Feuch an ceartaich thu na mearachdan gu h-ìosal"
+msgstr[2] "Feuch an ceartaich thu na mearachdan gu h-ìosal"
+msgstr[3] "Feuch an ceartaich thu na mearachdan gu h-ìosal"
+
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr "agus"
+
+#: tree_comments/templates/tree_comments/preview.html:30
+msgid "Post your comment"
+msgstr "Postaich do bheachd"
+
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
+msgid "or make changes"
+msgstr "no atharraich e"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

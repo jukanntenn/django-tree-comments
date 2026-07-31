@@ -1,0 +1,321 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Translators:
+# Boris Chervenkov <office@sentido.bg>, 2012
+# Jannis Leidel <jannis@leidel.info>, 2011
+# Todor Lubenov <tgl.sysdev@gmail.com>, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: django-tree-comments\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
+"PO-Revision-Date: 2015-06-22 15:43+0000\n"
+"Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
+"Language-Team: Bulgarian (http://www.transifex.com/django/django-contrib-comments/language/bg/)\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tree_comments/admin.py:24
+msgid "Content"
+msgstr "Благодаря за маркирането"
+
+#: tree_comments/admin.py:28
+msgid "Metadata"
+msgstr "Метаданни"
+
+#: tree_comments/admin.py:71
+msgid "Flag selected comments"
+msgstr "Маркирай избраните коментари"
+
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:94
+msgid "Approve selected comments"
+msgstr "Одобри избраните коментари"
+
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:120
+msgid "Remove selected comments"
+msgstr "Премахване на избраните коментари"
+
+#: tree_comments/admin.py:137
+#, python-format
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "тип на съдържанието"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "ID на обекта"
+
+#: tree_comments/feeds.py:16
+#, python-format
+msgid "%(site_name)s comments"
+msgstr "%(site_name)s коментари"
+
+#: tree_comments/feeds.py:22
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr "Последни коментари  на %(site_name)s"
+
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
+msgctxt "Person name"
+msgid "Name"
+msgstr ""
+
+#: tree_comments/forms.py:117
+msgid "Email address"
+msgstr "Email адрес"
+
+#: tree_comments/forms.py:118
+msgid "URL"
+msgstr "URL адрес"
+
+#: tree_comments/forms.py:121
+msgid "Comment"
+msgstr "Коментар"
+
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
+
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
+msgstr "Ако въведете нещо в това поле, вашия коментар ще се третира като спам"
+
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
+
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
+
+#: tree_comments/models.py:32 tree_comments/models.py:197
+msgid "user"
+msgstr "потребител"
+
+#: tree_comments/models.py:38
+msgid "user's name"
+msgstr "потребителско име"
+
+#: tree_comments/models.py:39
+msgid "user's email address"
+msgstr "email адрес на потребителя"
+
+#: tree_comments/models.py:40
+msgid "user's URL"
+msgstr "URL адрес на потребителя"
+
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
+msgid "comment"
+msgstr "коментар"
+
+#: tree_comments/models.py:46
+msgid "date/time submitted"
+msgstr "дата и час на подаване"
+
+#: tree_comments/models.py:49
+msgid "IP address"
+msgstr "IP адрес"
+
+#: tree_comments/models.py:52
+msgid "is public"
+msgstr "е публичен"
+
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
+msgstr "Махнете отметката от това поле, за да премахнете коментара от сайта."
+
+#: tree_comments/models.py:59
+msgid "is removed"
+msgstr "е премахнат"
+
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
+msgstr "Щракнете тук ако коментарът е неподходящ. Вместо съдържанието на коментара, ще се покаже надписът \"Този коментар беше премахнат.\""
+
+#: tree_comments/models.py:77
+msgid "comments"
+msgstr "коментари"
+
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr "Този коментар е публикуван от регистриран потребител, затова името не може да бъде редактирано."
+
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr "Този коментар е публикуван от регистриран потребител, затова email адресът не може да бъде редактиран."
+
+#: tree_comments/models.py:188
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+"Публикуван от %(user)s на %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+
+#: tree_comments/models.py:207
+msgid "flag"
+msgstr "маркиране"
+
+#: tree_comments/models.py:208
+msgid "date"
+msgstr "дата"
+
+#: tree_comments/models.py:217
+msgid "comment flag"
+msgstr "отбелязване на коментар"
+
+#: tree_comments/models.py:218
+msgid "comment flags"
+msgstr "отбелязване на коментари"
+
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr ""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
+msgid "Approve a comment"
+msgstr "Одобряване на коментар"
+
+#: tree_comments/templates/tree_comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr "Наистина ли да стане този коментар публичен?"
+
+#: tree_comments/templates/tree_comments/approve.html:13
+msgid "Approve"
+msgstr "Одобри"
+
+#: tree_comments/templates/tree_comments/approved.html:4
+msgid "Thanks for approving"
+msgstr "Благодарим за одобрението"
+
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
+msgstr "Благодарим, че отделихте време, за да се подобри качеството на обсъждането на нашия сайт"
+
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
+msgid "Remove a comment"
+msgstr "Премахване на коментар"
+
+#: tree_comments/templates/tree_comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr "Сигурни ли сте, че искате да премахнете този коментар?"
+
+#: tree_comments/templates/tree_comments/delete.html:19
+msgid "Remove"
+msgstr "Премахване"
+
+#: tree_comments/templates/tree_comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Благодарим за премахването"
+
+#: tree_comments/templates/tree_comments/flag.html:4
+msgid "Flag this comment"
+msgstr "Маркирай този коментар"
+
+#: tree_comments/templates/tree_comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr "Сигурни ли сте, че искате да отбележете този коментар?"
+
+#: tree_comments/templates/tree_comments/flag.html:19
+msgid "Flag"
+msgstr "Отбелязване"
+
+#: tree_comments/templates/tree_comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Благодарим за отбелязването"
+
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
+msgid "Post"
+msgstr "Публикувай"
+
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
+msgid "Preview"
+msgstr "Преглед"
+
+#: tree_comments/templates/tree_comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr "Благодарим за коментара"
+
+#: tree_comments/templates/tree_comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr "Благодарим за Вашия коментар"
+
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
+msgid "Preview your comment"
+msgstr "Преглед на коментар"
+
+#: tree_comments/templates/tree_comments/preview.html:17
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr "и"
+
+#: tree_comments/templates/tree_comments/preview.html:30
+msgid "Post your comment"
+msgstr "Публикувай коментар"
+
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
+msgid "or make changes"
+msgstr "или направете промени"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

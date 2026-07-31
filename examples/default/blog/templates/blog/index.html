@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% block title %}Posts — django-tree-comments demo{% endblock %}
+{% block content %}
+    <h1>Posts</h1>
+    <p class="intro">
+        Five posts, each demonstrating a different comment topology.
+        Click a title to see the threaded comment UI in action.
+    </p>
+    <ul class="post-list">
+        {% for post in posts %}
+            <li class="post-list-item">
+                <a href="{% url 'blog-detail' post.pk %}" class="post-list-link">
+                    <span class="post-list-title">{{ post.title }}</span>
+                </a>
+                <span class="post-list-meta">{{ post.created_at|date:"Y-m-d" }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

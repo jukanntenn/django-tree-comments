@@ -1,0 +1,320 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Translators:
+# Besnik <besnik@programeshqip.org>, 2011
+# Besnik <besnik@programeshqip.org>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: django-tree-comments\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
+"PO-Revision-Date: 2016-10-11 21:34+0000\n"
+"Last-Translator: Besnik <besnik@programeshqip.org>\n"
+"Language-Team: Albanian (http://www.transifex.com/django/django-contrib-comments/language/sq/)\n"
+"Language: sq\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tree_comments/admin.py:24
+msgid "Content"
+msgstr "Lëndë"
+
+#: tree_comments/admin.py:28
+msgid "Metadata"
+msgstr "Tejtëdhëna"
+
+#: tree_comments/admin.py:71
+msgid "Flag selected comments"
+msgstr "Vëru shenjë komenteve të përzgjedhura"
+
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:94
+msgid "Approve selected comments"
+msgstr "Miratoji komentet e përzgjedhura"
+
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:120
+msgid "Remove selected comments"
+msgstr "Hiqi komentet e përzgjedhur"
+
+#: tree_comments/admin.py:137
+#, python-format
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "lloj lënde"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "ID objekti"
+
+#: tree_comments/feeds.py:16
+#, python-format
+msgid "%(site_name)s comments"
+msgstr "komente te %(site_name)s"
+
+#: tree_comments/feeds.py:22
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr "Komentet më të fundit te %(site_name)s"
+
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
+msgctxt "Person name"
+msgid "Name"
+msgstr "Emër"
+
+#: tree_comments/forms.py:117
+msgid "Email address"
+msgstr "Adresë email"
+
+#: tree_comments/forms.py:118
+msgid "URL"
+msgstr "URL"
+
+#: tree_comments/forms.py:121
+msgid "Comment"
+msgstr "Koment"
+
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
+
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
+msgstr "Nëse fusni diçka në këtë fushë, komenti juaj do të trajtohet si i padëshiruar"
+
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
+
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
+
+#: tree_comments/models.py:32 tree_comments/models.py:197
+msgid "user"
+msgstr "përdorues"
+
+#: tree_comments/models.py:38
+msgid "user's name"
+msgstr "emri i përdoruesit"
+
+#: tree_comments/models.py:39
+msgid "user's email address"
+msgstr "adresa email e përdoruesit"
+
+#: tree_comments/models.py:40
+msgid "user's URL"
+msgstr "URL përdoruesi"
+
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
+msgid "comment"
+msgstr "koment"
+
+#: tree_comments/models.py:46
+msgid "date/time submitted"
+msgstr "data/koha e parashtrimit"
+
+#: tree_comments/models.py:49
+msgid "IP address"
+msgstr "Adresë IP"
+
+#: tree_comments/models.py:52
+msgid "is public"
+msgstr "është publike"
+
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
+msgstr "Hiqjani shenjën kësaj kutize që ta bëni komentin të zhduket faktikisht prej sajtit."
+
+#: tree_comments/models.py:59
+msgid "is removed"
+msgstr "është hequr"
+
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
+msgstr "I vini shenjë kësaj kutie, nëse komenti është i papërshtatshëm. Në vend të tij do të shfaqet një mesazh \"Ky koment është hequr\"."
+
+#: tree_comments/models.py:77
+msgid "comments"
+msgstr "komente"
+
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr "Ky koment u postua nga një përdorues i mirëfilltësuar, ndaj emri është nën atributin vetëm-lexim."
+
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr "Ky koment u postua nga një përdorues i mirëfilltësuar, ndaj email-i është nën atributin vetëm-lexim."
+
+#: tree_comments/models.py:188
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+"Postuar nga %(user)s më %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+
+#: tree_comments/models.py:207
+msgid "flag"
+msgstr "shenjë"
+
+#: tree_comments/models.py:208
+msgid "date"
+msgstr "datë"
+
+#: tree_comments/models.py:217
+msgid "comment flag"
+msgstr "shenjë komenti"
+
+#: tree_comments/models.py:218
+msgid "comment flags"
+msgstr "shenja komenti"
+
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr "[%(site)s] Koment i ri i postuar te \"%(object)s\""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
+msgid "Approve a comment"
+msgstr "Miratoni një koment"
+
+#: tree_comments/templates/tree_comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr "Të bëhet vërtet publik ky koment?"
+
+#: tree_comments/templates/tree_comments/approve.html:13
+msgid "Approve"
+msgstr "Miratoje"
+
+#: tree_comments/templates/tree_comments/approved.html:4
+msgid "Thanks for approving"
+msgstr "Faleminderit që e miratuat"
+
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
+msgstr "Faleminderit për kohën e harxhuar për përmirësimin e cilësisë së diskutimit në site-in tonë."
+
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
+msgid "Remove a comment"
+msgstr "Hiqni një koment"
+
+#: tree_comments/templates/tree_comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr "Të hiqet vërtet ky koment?"
+
+#: tree_comments/templates/tree_comments/delete.html:19
+msgid "Remove"
+msgstr "Hiqe"
+
+#: tree_comments/templates/tree_comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Faleminderit që e hoqët"
+
+#: tree_comments/templates/tree_comments/flag.html:4
+msgid "Flag this comment"
+msgstr "I vini shenjë këtij komenti"
+
+#: tree_comments/templates/tree_comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr "T'i vihet shenjë vërtet këtij komenti?"
+
+#: tree_comments/templates/tree_comments/flag.html:19
+msgid "Flag"
+msgstr "Vëri shenjë"
+
+#: tree_comments/templates/tree_comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Faleminderit që i vutë shenjë"
+
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
+msgid "Post"
+msgstr "Postoje"
+
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
+msgid "Preview"
+msgstr "Paraparje"
+
+#: tree_comments/templates/tree_comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr "Faleminderit që komentuat"
+
+#: tree_comments/templates/tree_comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr "Faleminderit për komentin tuaj"
+
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
+msgid "Preview your comment"
+msgstr "Parashiheni komentin tuaj"
+
+#: tree_comments/templates/tree_comments/preview.html:17
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] "Ju lutem, ndreqni gabimin më poshtë"
+msgstr[1] "Ju lutem, ndreqni gabimet më poshtë"
+
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr " dhe "
+
+#: tree_comments/templates/tree_comments/preview.html:30
+msgid "Post your comment"
+msgstr "Postojeni komentin tuaj"
+
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
+msgid "or make changes"
+msgstr "ose bëni ndryshime"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

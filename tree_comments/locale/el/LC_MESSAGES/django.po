@@ -1,0 +1,322 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Translators:
+# Dimitris Glezos <glezos@indifex.com>, 2011
+# Jannis Leidel <jannis@leidel.info>, 2011
+# Nick Mavrakis <mavrakis.n@gmail.com>, 2016
+# Yorgos Pagles <y.pagles@gmail.com>, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: django-tree-comments\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
+"PO-Revision-Date: 2016-07-15 13:02+0000\n"
+"Last-Translator: Nick Mavrakis <mavrakis.n@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/django/django-contrib-comments/language/el/)\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tree_comments/admin.py:24
+msgid "Content"
+msgstr "Περιεχόμενο"
+
+#: tree_comments/admin.py:28
+msgid "Metadata"
+msgstr "Μεταδεδομένα"
+
+#: tree_comments/admin.py:71
+msgid "Flag selected comments"
+msgstr "Επισημανση των επιλεγμένων σχολίων"
+
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:94
+msgid "Approve selected comments"
+msgstr "Έγκριση των συγκεκριμένων σχολίων"
+
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:120
+msgid "Remove selected comments"
+msgstr "Αφαίρεση των επιλεγμένων σχολίων"
+
+#: tree_comments/admin.py:137
+#, python-format
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "τύπος περιεχομένου"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "ID αντικειμένου"
+
+#: tree_comments/feeds.py:16
+#, python-format
+msgid "%(site_name)s comments"
+msgstr "Σχόλια στο %(site_name)s"
+
+#: tree_comments/feeds.py:22
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr "Τελευταία σχόλια στο %(site_name)s"
+
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
+msgctxt "Person name"
+msgid "Name"
+msgstr "Όνομα"
+
+#: tree_comments/forms.py:117
+msgid "Email address"
+msgstr "Ηλεκτρονική διεύθυνση"
+
+#: tree_comments/forms.py:118
+msgid "URL"
+msgstr "URL"
+
+#: tree_comments/forms.py:121
+msgid "Comment"
+msgstr "Σχόλιο"
+
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
+
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
+msgstr "Αφήστε αυτό το πεδίο κενό. Αν εισάγετε κάτι τότε το σχόλιο θα θεωρηθεί spam και δεν θα εμφανιστεί."
+
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
+
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
+
+#: tree_comments/models.py:32 tree_comments/models.py:197
+msgid "user"
+msgstr "χρήστης"
+
+#: tree_comments/models.py:38
+msgid "user's name"
+msgstr "όνομα χρήστη"
+
+#: tree_comments/models.py:39
+msgid "user's email address"
+msgstr "ηλεκτρονική διεύθυνση χρήστη"
+
+#: tree_comments/models.py:40
+msgid "user's URL"
+msgstr "διεύθυνση ιστοτόπου χρήστη"
+
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
+msgid "comment"
+msgstr "σχόλιο"
+
+#: tree_comments/models.py:46
+msgid "date/time submitted"
+msgstr "ημερομηνία/ώρα υποβολής"
+
+#: tree_comments/models.py:49
+msgid "IP address"
+msgstr "διεύθυνση IP"
+
+#: tree_comments/models.py:52
+msgid "is public"
+msgstr "είναι δημόσιο"
+
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
+msgstr "Απεπιλέξτε αυτή την επιλογή για να κάνετε το σχόλιο να μην εμφανίζεται."
+
+#: tree_comments/models.py:59
+msgid "is removed"
+msgstr "είναι διαγραμμένο"
+
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
+msgstr "Επιλέξτε αυτή την επιλογή εάν το σχόλιο είναι ανάρμοστο. Ένα μήνυμα \"Αυτό το σχόλιο διαγράφηκε\" θα εμφανιστεί στη θέση του."
+
+#: tree_comments/models.py:77
+msgid "comments"
+msgstr "σχόλια"
+
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr "Αυτό το σχόλιο πραγματοποιήθκε από πιστοποιημένο χρήστη και για τον λόγο αυτό δεν είναι είναι δυνατή η επεξεργασία του ονόματός του."
+
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr "Αυτό το σχόλιο πραγματοποιήθκε από πιστοποιημένο χρήστη και για τον λόγο αυτό δεν είναι είναι δυνατή η επεξεργασία της διεύθυνσης του ηλεκτρονικού του ταχυδρομείου."
+
+#: tree_comments/models.py:188
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+"Σχόλιο από %(user)s στις %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+
+#: tree_comments/models.py:207
+msgid "flag"
+msgstr "επισήμανση"
+
+#: tree_comments/models.py:208
+msgid "date"
+msgstr "ημερομηνία"
+
+#: tree_comments/models.py:217
+msgid "comment flag"
+msgstr "επισήμανση σχολίου"
+
+#: tree_comments/models.py:218
+msgid "comment flags"
+msgstr "επισημάνσεις σχολίου"
+
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr "[%(site)s] Νέο σχόλιο δημοσιεύτηκε στο \"%(object)s\""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
+msgid "Approve a comment"
+msgstr "Έγκριση σχολίου"
+
+#: tree_comments/templates/tree_comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr "Επιβεβαιώστε ότι επιθυμείτε την δημόσια εμφάνιση του σχολίου."
+
+#: tree_comments/templates/tree_comments/approve.html:13
+msgid "Approve"
+msgstr "Έγκριση."
+
+#: tree_comments/templates/tree_comments/approved.html:4
+msgid "Thanks for approving"
+msgstr "Ευχαριστούμε για την έγκριση."
+
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
+msgstr "Ευχαριστούμε για τον χρόνο που διαθέσατε για την βελτίωση της ποιότητας των σχολίων στον ιστότοπό μας."
+
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
+msgid "Remove a comment"
+msgstr "Αφαίρεση σχολίου"
+
+#: tree_comments/templates/tree_comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr "Επιβεβαιώστε ότι επιθυμείτε την αφαίρεση του σχολίου."
+
+#: tree_comments/templates/tree_comments/delete.html:19
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: tree_comments/templates/tree_comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Ευχαριστούμε για την αφαίρεση"
+
+#: tree_comments/templates/tree_comments/flag.html:4
+msgid "Flag this comment"
+msgstr "Επισήμανση σχολίου"
+
+#: tree_comments/templates/tree_comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr "Επιβεβαιώστε ότι επιθυμείτε την επισήμανσση του σχολίου."
+
+#: tree_comments/templates/tree_comments/flag.html:19
+msgid "Flag"
+msgstr "Επισήμανση"
+
+#: tree_comments/templates/tree_comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Ευχαριστούμε για την επισήμανση"
+
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
+msgid "Post"
+msgstr "Δημοσίευση"
+
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
+msgid "Preview"
+msgstr "Προβολή:"
+
+#: tree_comments/templates/tree_comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr "Ευχαριστούμε για το σχόλιό σας"
+
+#: tree_comments/templates/tree_comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr "Ευχαριστούμε για το σχόλιό σας"
+
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
+msgid "Preview your comment"
+msgstr "Προβολή του σχολίου σας"
+
+#: tree_comments/templates/tree_comments/preview.html:17
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] "Παρακαλούμε διορθώστε τα παρακάτω σφάλματα:"
+msgstr[1] "Παρακαλούμε διορθώστε τα παρακάτω σφάλματα:"
+
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr "και"
+
+#: tree_comments/templates/tree_comments/preview.html:30
+msgid "Post your comment"
+msgstr "Δημοσιοποίηση του σχολίου σας"
+
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
+msgid "or make changes"
+msgstr "ή πραγματοποιήστε αλλαγές"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

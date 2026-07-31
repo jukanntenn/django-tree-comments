@@ -1,0 +1,22 @@
+[project]
+name = "custom"
+version = "0.1.0"
+description = "django-tree-comments minimal demo: swappable comment model."
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "django>=4.2",
+  "django-tree-comments",
+  "typing-extensions>=4.15",
+]
+
+[tool.uv]
+sources.django-tree-comments = { path = "../../", editable = true }

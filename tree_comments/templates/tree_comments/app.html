@@ -1,0 +1,13 @@
+{% load tree_comments i18n %}
+<div class="tree-comments-app">
+    {% include "tree_comments/form.html" %}
+    <div id="comments-threaded">
+        {% if comment_list %}
+            {% for comment in comment_list %}
+                {% include "tree_comments/comment.html" with comment=comment %}
+            {% endfor %}
+        {% else %}
+            <p class="no-comments">{% trans "No comments yet." %}</p>
+        {% endif %}
+    </div>
+</div>

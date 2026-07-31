@@ -1,0 +1,22 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}custom comment model{% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+    </head>
+    <body>
+        <header class="site-header">
+            <nav>
+                <a href="{% url 'blog-index' %}" class="brand">custom comment model</a>
+                <span class="tagline">{% trans "demo" %}</span>
+            </nav>
+        </header>
+        <main class="container">
+            {% block content %}{% endblock %}
+        </main>
+    </body>
+</html>

@@ -1,36 +1,208 @@
+from typing import Any
+
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from tree_queries.models import TreeNode
+
+from .base import AbstractBaseComment
+from .managers import CommentManager
+
+COMMENT_MAX_LENGTH = getattr(settings, "COMMENT_MAX_LENGTH", 3000)
 
 
-class AbstractTreeComment(TreeNode):
-    content = models.TextField(_("content"))
-    created_at = models.DateTimeField(_("created at"), default=None)
-    ip_address = models.GenericIPAddressField(_("IP address"), unpack_ipv4=True, blank=True, null=True)
+class AbstractComment(AbstractBaseComment):
+    """
+    A user comment about some object.
+    """
 
+    parent = models.ForeignKey(
+        getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment"),
+        verbose_name=_("parent comment"),
+        help_text=_("The parent comment being replied to"),
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="children",
+    )
+    # Who posted this comment? If ``user`` is set then it was an authenticated
+    # user; otherwise at least user_name should have been set and the comment
+    # was posted by a non-authenticated user.
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("user"),
-        related_name="comments",
-        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="%(class)s_comments",
+        on_delete=models.SET_NULL,
     )
+    user_name = models.CharField(_("user's name"), max_length=50, blank=True)
+    user_email = models.EmailField(_("user's email address"), blank=True)
+    user_url = models.URLField(_("user's URL"), blank=True)
+
+    comment = models.TextField(_("comment"), max_length=COMMENT_MAX_LENGTH)
+
+    # Metadata about the comment
+    submit_date = models.DateTimeField(_("date/time submitted"), default=None, db_index=True)
+    ip_address = models.GenericIPAddressField(_("IP address"), unpack_ipv4=True, blank=True, null=True)
+    is_public = models.BooleanField(
+        _("is public"),
+        default=True,
+        help_text=_("Uncheck this box to make the comment effectively disappear from the site."),
+    )
+    is_removed = models.BooleanField(
+        _("is removed"),
+        default=False,
+        db_index=True,
+        help_text=_(
+            "Check this box if the comment is inappropriate. "
+            'A "This comment has been removed" message will '
+            "be displayed instead."
+        ),
+    )
+
+    # Manager
+    objects = CommentManager()
 
     class Meta:
         abstract = True
-        verbose_name = _("tree comment")
-        verbose_name_plural = _("tree comments")
+        ordering = ("submit_date",)
+        permissions = [("can_moderate", "Can moderate comments")]  # noqa: RUF012
+        verbose_name = _("comment")
+        verbose_name_plural = _("comments")
 
-    def __str__(self):
-        return "%s: %s..." % (self.user, self.content[:50])
+    def __str__(self) -> str:
+        return f"{self.name}: {self.comment[:50]}..."
 
-    def save(self, *args, **kwargs):
-        if self.created_at is None:
-            self.created_at = timezone.now()
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        if self.submit_date is None:
+            self.submit_date = timezone.now()
+        super().save(*args, **kwargs)
+
+    def _get_userinfo(self) -> dict[str, str]:
+        """
+        Get a dictionary that pulls together information about the poster
+        safely for both authenticated and non-authenticated comments.
+
+        This dict will have ``name``, ``email``, and ``url`` fields.
+        """
+        if not hasattr(self, "_userinfo"):
+            userinfo: dict[str, str] = {
+                "name": self.user_name,
+                "email": self.user_email,
+                "url": self.user_url,
+            }
+            u = self.user
+            if u is not None:
+                if u.email:
+                    userinfo["email"] = u.email
+
+                if u.get_full_name():
+                    userinfo["name"] = u.get_full_name()
+                elif not self.user_name:
+                    userinfo["name"] = u.get_username()
+            self._userinfo = userinfo
+        return self._userinfo
+
+    userinfo = property(_get_userinfo, doc=_get_userinfo.__doc__)
+
+    def _get_name(self) -> str:
+        return self._get_userinfo()["name"]
+
+    def _set_name(self, val: str) -> None:
+        if self.user_id:
+            raise AttributeError(_("This comment was posted by an authenticated user and thus the name is read-only."))
+        self.user_name = val
+
+    name = property(_get_name, _set_name, doc="The name of the user who posted this comment")
+
+    def _get_email(self) -> str:
+        return self._get_userinfo()["email"]
+
+    def _set_email(self, val: str) -> None:
+        if self.user_id:
+            raise AttributeError(_("This comment was posted by an authenticated user and thus the email is read-only."))
+        self.user_email = val
+
+    email = property(_get_email, _set_email, doc="The email of the user who posted this comment")
+
+    def _get_url(self) -> str:
+        return self._get_userinfo()["url"]
+
+    def _set_url(self, val: str) -> None:
+        self.user_url = val
+
+    url = property(_get_url, _set_url, doc="The URL given by the user who posted this comment")
+
+    def get_absolute_url(self, anchor_pattern: str = "#c%(id)s") -> str:
+        return self.get_content_object_url() + (anchor_pattern % self.__dict__)
+
+    def get_reply_url(self) -> str:
+        return (
+            reverse(
+                "tree-comments-reply",
+                kwargs={
+                    "comment_id": self.pk,
+                },
+            )
+            + f"?content_type={self.content_type.app_label}.{self.content_type.model}&object_pk={self.object_pk}"
+        )
+
+    def get_as_text(self) -> str:
+        """
+        Return this comment as plain text.  Useful for emails.
+        """
+        d = {
+            "user": self.user or self.name,
+            "date": self.submit_date,
+            "comment": self.comment,
+            "domain": self.site.domain,
+            "url": self.get_absolute_url(),
+        }
+        return _("Posted by %(user)s at %(date)s\n\n%(comment)s\n\nhttp://%(domain)s%(url)s") % d
+
+
+class AbstractCommentFlag(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("user"),
+        related_name="comment_flags",
+        on_delete=models.CASCADE,
+    )
+    comment = models.ForeignKey(
+        getattr(settings, "TREE_COMMENTS_COMMENT_MODEL", "tree_comments.Comment"),
+        verbose_name=_("comment"),
+        related_name="flags",
+        on_delete=models.CASCADE,
+    )
+    flag = models.CharField(_("flag"), max_length=30, db_index=True)
+    flag_date = models.DateTimeField(_("date"), default=None)
+
+    SUGGEST_REMOVAL = "removal suggestion"
+    MODERATOR_DELETION = "moderator deletion"
+    MODERATOR_APPROVAL = "moderator approval"
+
+    class Meta:
+        abstract = True
+        unique_together = [("user", "comment", "flag")]  # noqa: RUF012
+        verbose_name = _("comment flag")
+        verbose_name_plural = _("comment flags")
+
+    def __str__(self) -> str:
+        return f"{self.flag} flag of comment ID {self.comment_id} by {self.user.get_username()}"
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        if self.flag_date is None:
+            self.flag_date = timezone.now()
         super().save(*args, **kwargs)
 
 
-class TreeComment(AbstractTreeComment):
-    class Meta(AbstractTreeComment.Meta):
+class Comment(AbstractComment):
+    class Meta(AbstractComment.Meta):
         swappable = "TREE_COMMENTS_COMMENT_MODEL"
+
+
+class CommentFlag(AbstractCommentFlag):
+    class Meta(AbstractCommentFlag.Meta):
+        swappable = "TREE_COMMENTS_COMMENT_FLAG_MODEL"

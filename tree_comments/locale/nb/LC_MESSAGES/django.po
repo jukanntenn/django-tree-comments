@@ -1,0 +1,323 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Translators:
+# Jannis Leidel <jannis@leidel.info>, 2011
+# Jon <jon@kolonial.no>, 2015
+# Jon <jon@kolonial.no>, 2018
+#   <jonklo@gmail.com>, 2012
+# Sigurd Gartmann <sigurdga-transifex@sigurdga.no>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: django-tree-comments\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 18:44+0800\n"
+"PO-Revision-Date: 2018-07-30 11:46+0000\n"
+"Last-Translator: Jon <jon@kolonial.no>\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/django/django-contrib-comments/language/nb/)\n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tree_comments/admin.py:24
+msgid "Content"
+msgstr "Innhold"
+
+#: tree_comments/admin.py:28
+msgid "Metadata"
+msgstr "Metadata"
+
+#: tree_comments/admin.py:71
+msgid "Flag selected comments"
+msgstr "Flagg valgte kommentarer"
+
+#: tree_comments/admin.py:86
+#, python-format
+msgid "%d comment was successfully flagged."
+msgid_plural "%d comments were successfully flagged."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:94
+msgid "Approve selected comments"
+msgstr "Tillat valgte kommentarer"
+
+#: tree_comments/admin.py:112
+#, python-format
+msgid "%d comment was successfully approved."
+msgid_plural "%d comments were successfully approved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/admin.py:120
+msgid "Remove selected comments"
+msgstr "Fjern valgte kommentarer"
+
+#: tree_comments/admin.py:137
+#, python-format
+msgid "%d comment was successfully removed."
+msgid_plural "%d comments were successfully removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: tree_comments/base.py:18
+msgid "content type"
+msgstr "innholdstype"
+
+#: tree_comments/base.py:22
+msgid "object ID"
+msgstr "objekt-ID"
+
+#: tree_comments/feeds.py:16
+#, python-format
+msgid "%(site_name)s comments"
+msgstr "%(site_name)s kommentarer"
+
+#: tree_comments/feeds.py:22
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr "Siste kommentarer fra %(site_name)s"
+
+#: tree_comments/forms.py:114
+msgid "Parent comment"
+msgstr ""
+
+#: tree_comments/forms.py:116
+msgctxt "Person name"
+msgid "Name"
+msgstr "Navn"
+
+#: tree_comments/forms.py:117
+msgid "Email address"
+msgstr "E-postadresse"
+
+#: tree_comments/forms.py:118
+msgid "URL"
+msgstr "Nettadresse"
+
+#: tree_comments/forms.py:121
+msgid "Comment"
+msgstr "Kommentar"
+
+#: tree_comments/forms.py:226
+msgid "The parent comment does not exist."
+msgstr ""
+
+#: tree_comments/forms.py:235
+msgid "If you enter anything in this field your comment will be treated as spam"
+msgstr "Hvis du oppgir noe i dette feltet, vil kommentaren bli behandlet som spam"
+
+#: tree_comments/models.py:20
+msgid "parent comment"
+msgstr ""
+
+#: tree_comments/models.py:21
+msgid "The parent comment being replied to"
+msgstr ""
+
+#: tree_comments/models.py:32 tree_comments/models.py:197
+msgid "user"
+msgstr "bruker"
+
+#: tree_comments/models.py:38
+msgid "user's name"
+msgstr "brukerens navn"
+
+#: tree_comments/models.py:39
+msgid "user's email address"
+msgstr "brukerens e-postadresse"
+
+#: tree_comments/models.py:40
+msgid "user's URL"
+msgstr "brukerens nettadresse"
+
+#: tree_comments/models.py:42 tree_comments/models.py:76
+#: tree_comments/models.py:203
+msgid "comment"
+msgstr "kommentar"
+
+#: tree_comments/models.py:46
+msgid "date/time submitted"
+msgstr "dato/tid for innsendelse"
+
+#: tree_comments/models.py:49
+msgid "IP address"
+msgstr "IP-adresse"
+
+#: tree_comments/models.py:52
+msgid "is public"
+msgstr "er tilgjengelig for alle"
+
+#: tree_comments/models.py:55
+msgid "Uncheck this box to make the comment effectively disappear from the site."
+msgstr "Fjern avhuking av denne boksen for å fjerne kommentaren fra siden."
+
+#: tree_comments/models.py:59
+msgid "is removed"
+msgstr "er fjernet"
+
+#: tree_comments/models.py:63
+msgid "Check this box if the comment is inappropriate. A \"This comment has been removed\" message will be displayed instead."
+msgstr "Huk av denne hvis kommentaren er upassende. Meldingen «Denne kommentaren har blitt fjernet» vil bli vist i stedet."
+
+#: tree_comments/models.py:77
+msgid "comments"
+msgstr "kommentarer"
+
+#: tree_comments/models.py:124
+msgid "This comment was posted by an authenticated user and thus the name is read-only."
+msgstr "Denne kommentaren er skrevet av en innlogget bruker og navnet kan derfor ikke endres."
+
+#: tree_comments/models.py:141
+msgid "This comment was posted by an authenticated user and thus the email is read-only."
+msgstr "Denne kommentaren er skrevet av en innlogget bruker og e-postadressen kan derfor ikke endres."
+
+#: tree_comments/models.py:188
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+"Skrevet av %(user)s, %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+
+#: tree_comments/models.py:207
+msgid "flag"
+msgstr "flagg"
+
+#: tree_comments/models.py:208
+msgid "date"
+msgstr "dato"
+
+#: tree_comments/models.py:217
+msgid "comment flag"
+msgstr "kommentarflagg"
+
+#: tree_comments/models.py:218
+msgid "comment flags"
+msgstr "kommentarflagg"
+
+#: tree_comments/moderation.py:263
+#, python-format
+msgid "[%(site)s] New comment posted on \"%(object)s\""
+msgstr "[%(site)s] Ny kommentar skrevet på \"%(object)s\""
+
+#: tree_comments/templates/tree_comments/app.html:10
+msgid "No comments yet."
+msgstr ""
+
+#: tree_comments/templates/tree_comments/approve.html:4
+msgid "Approve a comment"
+msgstr "Tillat en kommentar"
+
+#: tree_comments/templates/tree_comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr "Gjør denne kommentaren offentlig?"
+
+#: tree_comments/templates/tree_comments/approve.html:13
+msgid "Approve"
+msgstr "Godkjenn"
+
+#: tree_comments/templates/tree_comments/approved.html:4
+msgid "Thanks for approving"
+msgstr "Takk for godkjennelse"
+
+#: tree_comments/templates/tree_comments/approved.html:7
+#: tree_comments/templates/tree_comments/deleted.html:7
+#: tree_comments/templates/tree_comments/flagged.html:7
+msgid "Thanks for taking the time to improve the quality of discussion on our site"
+msgstr "Takk for at du tok deg tid til å forbedre kvaliteten på diskusjonen på siden vår"
+
+#: tree_comments/templates/tree_comments/comment.html:9
+msgid "reply"
+msgstr ""
+
+#: tree_comments/templates/tree_comments/delete.html:4
+msgid "Remove a comment"
+msgstr "Fjern en kommentar"
+
+#: tree_comments/templates/tree_comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr "Fjern denne kommentaren?"
+
+#: tree_comments/templates/tree_comments/delete.html:19
+msgid "Remove"
+msgstr "Fjern"
+
+#: tree_comments/templates/tree_comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Takk for fjerningen"
+
+#: tree_comments/templates/tree_comments/flag.html:4
+msgid "Flag this comment"
+msgstr "Flagg denne kommentaren"
+
+#: tree_comments/templates/tree_comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr "Flagg denne kommentaren?"
+
+#: tree_comments/templates/tree_comments/flag.html:19
+msgid "Flag"
+msgstr "Flagg"
+
+#: tree_comments/templates/tree_comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Takk for flagging"
+
+#: tree_comments/templates/tree_comments/form.html:22
+#: tree_comments/templates/tree_comments/preview.html:48
+msgid "Post"
+msgstr "Publiser"
+
+#: tree_comments/templates/tree_comments/form.html:26
+#: tree_comments/templates/tree_comments/preview.html:52
+msgid "Preview"
+msgstr "Forhåndsvisning"
+
+#: tree_comments/templates/tree_comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr "Takk for kommentar"
+
+#: tree_comments/templates/tree_comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr "Takk for din kommentar"
+
+#: tree_comments/templates/tree_comments/preview.html:4
+#: tree_comments/templates/tree_comments/preview.html:20
+msgid "Preview your comment"
+msgstr "Forhåndsvis kommentaren din"
+
+#: tree_comments/templates/tree_comments/preview.html:17
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] "Vennligst korriger feilen under"
+msgstr[1] "Vennligst korriger feilene under"
+
+#: tree_comments/templates/tree_comments/preview.html:25
+msgid "and"
+msgstr "og"
+
+#: tree_comments/templates/tree_comments/preview.html:30
+msgid "Post your comment"
+msgstr "Publiser din kommentar"
+
+#. Translators: This string follows the 'Post your comment' submit button.
+#: tree_comments/templates/tree_comments/preview.html:32
+msgid "or make changes"
+msgstr "eller gjør endringer"
+
+#: tree_comments/templates/tree_comments/reply.html:4
+msgid "Reply to user's comment"
+msgstr ""
+
+#: tree_comments/views.py:504
+msgid "Reply to comment"
+msgstr ""

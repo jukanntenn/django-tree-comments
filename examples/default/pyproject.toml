@@ -1,0 +1,24 @@
+[project]
+name = "default"
+version = "0.1.0"
+description = "django-tree-comments main demo: faker-seeded topologies + HTMX threaded UI."
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "django>=4.2",
+  "django-tree-comments",
+  "faker>=30",
+  "psycopg[binary]>=3.2.13",
+  "typing-extensions>=4.16",
+]
+
+[tool.uv]
+sources.django-tree-comments = { path = "../../", editable = true }

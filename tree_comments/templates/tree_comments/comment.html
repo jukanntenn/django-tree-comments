@@ -1,0 +1,13 @@
+{% load i18n %}
+<div id="c{{ comment.id }}"
+     class="comment-item{% if comment.depth %} is-child{% endif %}">
+    <div class="comment-meta">
+        <span class="comment-user-name">
+            {{ comment.name }}
+            {% if comment.parent %}&gt; {{ comment.parent.name }}{% endif %}
+        </span> ·
+        <span class="comment-submit-date">{{ comment.submit_date|date:"Y-m-d H:i:s" }}</span> ·
+        <a href="{{ comment.get_reply_url }}{% if next %}&next={{ next }}{% endif %}">{% trans "reply" %}</a>
+    </div>
+    <div class="comment-content">{{ comment.comment }}</div>
+</div>

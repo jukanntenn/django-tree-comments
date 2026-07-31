@@ -1,0 +1,61 @@
+{% load i18n %}
+{% with comment=node.comment %}
+  <div id="c{{ comment.id }}"
+       class="tc-comment{% if node.comment.parent_id %} is-child{% endif %}"
+       data-comment-id="{{ comment.id }}"
+       data-depth="{{ depth|default:0 }}"
+       data-submit-date="{{ comment.submit_date|date:"c" }}"
+       data-collapsed="false">
+    <div class="tc-comment__row">
+      <span class="tc-avatar"
+            data-name="{{ comment.name }}"
+            aria-hidden="true">{{ comment.name|slice:":1" }}</span>
+      <div class="tc-comment__main">
+        <div class="tc-meta">
+          <span class="tc-author">{{ comment.name }}</span>
+          {% if comment.parent_id %}
+            <a href="#c{{ comment.parent_id }}"
+               class="tc-reply-to__link"
+               data-parent-id="{{ comment.parent_id }}">
+              <svg class="tc-reply-to__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 4.5 3 7.5l3 3M3 7.5h7a3 3 0 0 1 3 3v1"></path>
+              </svg>
+              {% blocktranslate with name=comment.parent.name %}reply to {{ name }}{% endblocktranslate %}
+            </a>
+          {% endif %}
+          <time class="tc-date"
+                data-iso="{{ comment.submit_date|date:"c" }}"
+                title="{{ comment.submit_date|date:"Y-m-d H:i:s" }}"
+                datetime="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|date:"Y-m-d H:i" }}</time>
+        </div>
+        {% if comment.is_removed %}
+          <div class="tc-body tc-body--removed">{% trans "[removed]" %}</div>
+        {% else %}
+          {% if comment.parent_id and comment.parent.comment %}
+            <blockquote class="tc-quote">
+              <span class="tc-quote__author">{{ comment.parent.name }}:</span>
+              <span class="tc-quote__text">{{ comment.parent.comment|truncatechars:80 }}</span>
+            </blockquote>
+          {% endif %}
+          <div class="tc-body">{{ comment.comment|linebreaksbr }}</div>
+        {% endif %}
+        <div class="tc-actions">
+          <a class="tc-action" href="{{ comment.get_reply_url }}{% if next %}&next={{ next }}{% endif %}">{% trans "Reply" %}</a>
+          <a class="tc-action" href="#c{{ comment.id }}" title="{% trans 'Permalink' %}">{% trans "Share" %}</a>
+        </div>
+      </div>
+    </div>
+    <div class="tc-children" id="children-of-{{ comment.id }}">
+      {% for child in node.children %}
+        {% include "tree_comments/comment.html" with node=child depth=depth|add:1 %}
+      {% endfor %}
+    </div>
+    {% if node.children %}
+      <button type="button" class="tc-collapsed-pill" aria-expanded="true">
+        <span>−</span>
+        <span class="tc-collapsed-pill__count">{{ node.children|length }}</span>
+        {% trans "replies hidden" %}
+      </button>
+    {% endif %}
+  </div>
+{% endwith %}

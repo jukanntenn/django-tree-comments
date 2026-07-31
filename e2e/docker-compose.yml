@@ -1,0 +1,20 @@
+# PostgreSQL instance dedicated to e2e. Kept separate from perf/docker-compose.yml
+# to avoid port and data conflicts. Merge later if it turns out to be safe.
+#
+# Start: docker compose -f e2e/docker-compose.yml up -d
+# Stop:  docker compose -f e2e/docker-compose.yml down
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: treecomments-e2e-postgres
+    environment:
+      POSTGRES_DB: tree_comments_e2e
+      POSTGRES_USER: treecomments
+      POSTGRES_PASSWORD: treecomments
+    ports:
+      - "5433:5432"   # Use 5433 to avoid clashing with perf's 5432
+    command: >
+      postgres
+      -c max_connections=20
+      -c shared_buffers=64MB
