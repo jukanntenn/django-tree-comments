@@ -38,6 +38,8 @@ jobs:
             tox-env: 'py312-django52'
           - python-version: '3.13'
             tox-env: 'py313-django52'
+          - python-version: '3.14'
+            tox-env: 'py314-django52'
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v7
@@ -52,7 +54,7 @@ jobs:
         env:
           PYTEST_ADDOPTS: "--no-reuse-db"
       - uses: codecov/codecov-action@v7
-        if: matrix.python-version == '3.13'
+        if: matrix.python-version == '3.14'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
