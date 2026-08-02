@@ -9,7 +9,38 @@ permissions:
   id-token: write
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.10'
+            tox-env: 'py310-django52'
+          - python-version: '3.11'
+            tox-env: 'py311-django52'
+          - python-version: '3.12'
+            tox-env: 'py312-django52'
+          - python-version: '3.13'
+            tox-env: 'py313-django52'
+          - python-version: '3.14'
+            tox-env: 'py314-django52'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv pip install --system tox tox-uv
+      - run: tox -e ${{ matrix.tox-env }}
+        env:
+          PYTEST_ADDOPTS: "--no-reuse-db"
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -20,8 +51,24 @@ jobs:
           name: dist
           path: dist/
 
-  publish-pypi:
+  publish-testpypi:
     needs: build
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+
+  publish-pypi:
+    needs: [build, publish-testpypi]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
@@ -39,11 +86,41 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v7
+      # checkout is required so changelog-reader can read ./CHANGELOG.md.
+      - uses: actions/checkout@v5
+
+      # v0.0.4rc1 -> 0.0.4rc1 (strip the leading "v" to match CHANGELOG headings)
+      - name: Strip leading v from tag
+        id: tag
+        shell: bash
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      # Extract the CHANGELOG.md section for this version (Keep a Changelog format,
+      # PEP 440 version scheme so 0.0.4rc1 matches). Fall back to GitHub's
+      # auto-generated notes only when no CHANGELOG entry exists for the tag.
+      - name: Read changelog entry for this version
+        id: changelog
+        uses: mindsers/changelog-reader-action@v2
+        continue-on-error: true
+        with:
+          version: ${{ steps.tag.outputs.version }}
+          version_scheme: pep440
+          path: ./CHANGELOG.md
+
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist/
-      - uses: softprops/action-gh-release@v3
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/*
-          generate_release_notes: true
+          body_path: ${{ steps.changelog.outputs.changes_file }}
+          generate_release_notes: ${{ steps.changelog.outcome != 'success' }}
+          # Mark rc tags as prerelease / not-latest. OR the changelog's own
+          # `status` signal with the tag-name heuristic so it still works when
+          # we fell back to auto notes (no CHANGELOG entry).
+          prerelease: ${{ steps.changelog.outputs.status == 'prereleased' || contains(github.ref_name, 'rc') }}
+          make_latest: ${{ !contains(github.ref_name, 'rc') }}
