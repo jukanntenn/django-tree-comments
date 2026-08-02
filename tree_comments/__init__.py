@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from django.db.models import Model
     from django.forms import Form
 
-VERSION = (0, 0, 4, "rc", 1)  # PEP 440 release level: "alpha" | "beta" | "rc" | "final"
 __version__ = "0.0.4rc1"
 
 DEFAULT_COMMENTS_APP = "tree_comments"

@@ -83,4 +83,15 @@ hooks = [
         pass_filenames = false,
         files = { glob = ["AGENTS.md", "CLAUDE.md"] },
     },
+    {
+        # tree_comments/__init__.py __version__ is the single source of truth
+        # (hatchling reads it dynamically). Guard against typos that would
+        # break `uv build` only at release time by validating it here.
+        id = "version-pep440",
+        name = "tree_comments __version__ is a valid PEP 440 version",
+        language = "system",
+        entry = "python scripts/check_version.py",
+        pass_filenames = false,
+        files = { glob = ["tree_comments/__init__.py", "scripts/check_version.py"] },
+    },
 ]

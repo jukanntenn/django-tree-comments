@@ -4,7 +4,6 @@ requires = [ "hatchling" ]
 
 [project]
 name = "django-tree-comments"
-version = "0.0.4rc1"
 description = "A Django app for threaded comments using Common Table Expressions (CTE)"
 readme = "README.md"
 keywords = [ "comments", "cte", "django", "nested", "replies", "threaded", "tree" ]
@@ -31,6 +30,7 @@ classifiers = [
   "Topic :: Internet :: WWW/HTTP",
   "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
+dynamic = [ "version" ]
 dependencies = [
   "django>=5.2",
   "django-cte>=1.3.3",
@@ -62,6 +62,9 @@ docs = [
 ]
 
 [tool.hatch]
+# Single source of truth: the version is read from tree_comments/__init__.py
+# via hatchling's default regex source (matches the __version__ string).
+version.path = "tree_comments/__init__.py"
 # Only the library ships in the release package. The trailing slash makes the
 # include match the top-level tree_comments/ package only (not examples that
 # happen to contain a tree_comments/ subdirectory in their templates/static).
