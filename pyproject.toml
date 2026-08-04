@@ -198,6 +198,7 @@ lint.pylint.max-returns = 8
 lint.pylint.max-statements = 60
 
 [tool.mypy]
+exclude = [ "(\\.claude|\\.codex|\\.zcode)/hooks/" ]
 python_version = "3.10"
 warn_redundant_casts = true
 warn_unused_ignores = true

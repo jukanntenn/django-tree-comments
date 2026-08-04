@@ -68,7 +68,7 @@ hooks = [
             "django-cte>=2",
         ],
         args = ["--strict", "--config-file=pyproject.toml"],
-        exclude = { glob = ["tests/**", "examples/**", "migrations/**", "docs/**", "perf/**"] },
+        exclude = { glob = ["tests/**", "examples/**", "migrations/**", "docs/**", "perf/**", ".claude/hooks/**", ".codex/hooks/**", ".zcode/hooks/**"] },
     },
 ]
 

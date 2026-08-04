@@ -1,13 +1,12 @@
 {
   "hooks": {
-    "enabled": true,
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "apply_patch",
         "hooks": [
           {
             "type": "command",
-            "command": "uv run python .claude/hooks/format_on_edit.py"
+            "command": "uv run \"$(git rev-parse --show-toplevel)/.codex/hooks/post_tool_use.py\""
           }
         ]
       }
@@ -17,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run python .claude/hooks/lint_gate.py"
+            "command": "uv run \"$(git rev-parse --show-toplevel)/.codex/hooks/stop.py\""
           }
         ]
       }
