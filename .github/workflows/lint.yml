@@ -5,16 +5,28 @@ on:
     paths:
       - '**.py'
       - '**.html'
+      - '**.ts'
       - 'pyproject.toml'
+      - 'uv.lock'
       - 'prek.toml'
+      - 'e2e/**'
+      - 'scripts/**'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
       - '.editorconfig'
       - '.github/workflows/**'
   pull_request:
     paths:
       - '**.py'
       - '**.html'
+      - '**.ts'
       - 'pyproject.toml'
+      - 'uv.lock'
       - 'prek.toml'
+      - 'e2e/**'
+      - 'scripts/**'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
       - '.editorconfig'
       - '.github/workflows/**'
 
@@ -25,9 +37,31 @@ concurrency:
 permissions:
   contents: read
 
+# Single source of truth: every check CI runs is declared in prek
+# (prek.toml + e2e/prek.toml). CI just installs the toolchains prek's hooks
+# call (uv sync for Python tools, npm ci for e2e) and runs prek. No parallel
+# lint/format definition exists in CI.
 jobs:
-  prek:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: j178/prek-action@v3.0.0
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+      - name: Install e2e deps
+        run: cd e2e && npm ci --no-audit --no-fund
+      - name: Validate prek config
+        run: uv run prek validate-config prek.toml e2e/prek.toml
+      - name: prek run --all-files (format + lint + check gates)
+        # Fixers mutate; prek exits non-zero if any file needed formatting or
+        # any gate failed — the comprehensive single-source gate, identical to
+        # what runs locally on commit.
+        run: uv run prek run --all-files --show-diff-on-failure

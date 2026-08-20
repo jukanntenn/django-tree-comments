@@ -1,87 +1,163 @@
-# prek configuration (native prek TOML format; not compatible with upstream pre-commit).
+# prek configuration — the single source of truth for every quality gate in
+# this repo. Nothing else may define formatting/linting rules: the AI tool
+# hooks (.claude/.codex/.zcode/.opencode) and CI (.github/workflows/lint.yml)
+# are thin wrappers that invoke:
+#
+#   uv run prek run --group format --files <edited>        # AI post-edit (fast fixers)
+#   uv run prek run --group lint --group check --all-files # AI stop gate
+#   uv run prek run --all-files                            # commit + CI full gate
+#
+# Every tool runs from the uv dev environment, so versions are pinned by
+# uv.lock — no parallel toolchain pinning exists anywhere else.
+#
+# Groups:
+#   format — mutating fixers (AI post-edit + commit); auto-fix always on.
+#   lint   — fast checks over the whole tree (ruff --fix, djlint --lint).
+#   check  — slower verification gates (mypy, lock files, migrations drift,
+#            AI-config sync, version). Never runs per-edit, only stop/commit/CI.
+#
 # Usage:
-#   prek install              # first time, write git hooks shim
-#   git commit ...            # auto-triggered afterwards
-#   prek run --all-files      # manual full run
-#   prek run ruff             # run a single hook (by id)
-#   SKIP=ruff git commit ...  # skip a single hook
-#   prek update               # bump every rev to the latest tag
+#   uv run prek install              # first time, write git hook shims
+#   git commit ...                   # auto-triggered afterwards
+#   uv run prek run --all-files      # manual full run
+#   uv run prek run <hook-id>        # run a single hook
+#   SKIP=ruff-check git commit ...   # skip a single hook
+#
+# Generated files (migrations, lock files) are exempt from every fixer — the
+# generator owns those bytes. Their freshness is enforced by dedicated check
+# hooks instead (uv-lock-check, migrations-drift).
 
+default_install_hook_types = ["pre-commit", "commit-msg"]
+
+# ---- Read-only builtins (commit + CI; whole tree) ----
 [[repos]]
-repo = "https://github.com/pre-commit/pre-commit-hooks"
-rev = "v6.0.0"
+repo = "builtin"
 hooks = [
-    { id = "trailing-whitespace" },
-    { id = "end-of-file-fixer" },
-    { id = "check-yaml", args = ["--allow-multiple-documents"] },
-    { id = "check-toml" },
-    { id = "check-json" },
-    { id = "check-merge-conflict" },
-    { id = "check-added-large-files", args = ["--maxkb=500"] },
-    { id = "mixed-line-ending", args = ["--fix=lf"] },
-    { id = "detect-private-key" },
+    { id = "check-yaml", args = ["--allow-multiple-documents"], stages = ["pre-commit"] },
+    { id = "check-toml", stages = ["pre-commit"] },
+    { id = "check-json", stages = ["pre-commit"] },
+    { id = "check-merge-conflict", stages = ["pre-commit"] },
+    { id = "check-added-large-files", args = ["--maxkb=500"], stages = ["pre-commit"] },
+    { id = "detect-private-key", stages = ["pre-commit"] },
 ]
 
+# ---- format group: builtin byte fixers ----
 [[repos]]
-repo = "https://github.com/astral-sh/ruff-pre-commit"
-rev = "v0.16.0"
+repo = "builtin"
 hooks = [
-    { id = "ruff", args = ["--fix"], exclude = { glob = "**/migrations/**" } },
-    { id = "ruff-format", exclude = { glob = "**/migrations/**" } },
-]
-
-[[repos]]
-repo = "https://github.com/djlint/djLint"
-rev = "v1.42.3"
-hooks = [
-    { id = "djlint-reformat-django", types = ["html"], exclude = { glob = ["examples/**"] } },
-    { id = "djlint-django", types = ["html"], args = ["--lint", "--configuration=pyproject.toml"], exclude = { glob = ["examples/**"] } },
-]
-
-[[repos]]
-repo = "https://github.com/tox-dev/pyproject-fmt"
-rev = "v2.25.3"
-hooks = [
-    { id = "pyproject-fmt" },
-]
-
-[[repos]]
-repo = "https://github.com/adamchainz/django-upgrade"
-rev = "1.31.1"
-hooks = [
-    { id = "django-upgrade", args = ["--target-version", "5.2"], exclude = { glob = "**/migrations/**" } },
-]
-
-[[repos]]
-repo = "https://github.com/pre-commit/mirrors-mypy"
-rev = "v2.3.0"
-hooks = [
-    {
-        id = "mypy",
-        # The django-stubs plugin imports every INSTALLED_APPS model on init,
-        # so the isolated env must include runtime deps (django / django-cte);
-        # otherwise it raises
-        # "Error constructing plugin instance of NewSemanalDjangoPlugin".
-        additional_dependencies = [
-            "django-stubs[compatible-mypy]>=6.0.7",
-            "django>=5.2",
-            "django-cte>=2",
-        ],
-        args = ["--strict", "--config-file=pyproject.toml"],
-        exclude = { glob = ["tests/**", "examples/**", "migrations/**", "docs/**", "perf/**", ".claude/hooks/**", ".codex/hooks/**", ".zcode/hooks/**"] },
-    },
+    { id = "trailing-whitespace", exclude = { glob = ["**/migrations/**", "uv.lock", "e2e/package-lock.json"] }, groups = ["format"], stages = ["pre-commit"] },
+    { id = "end-of-file-fixer", exclude = { glob = ["**/migrations/**", "uv.lock", "e2e/package-lock.json"] }, groups = ["format"], stages = ["pre-commit"] },
+    { id = "mixed-line-ending", args = ["--fix=lf"], exclude = { glob = ["**/migrations/**", "uv.lock", "e2e/package-lock.json"] }, groups = ["format"], stages = ["pre-commit"] },
 ]
 
 [[repos]]
 repo = "local"
 hooks = [
+    # ---- format group: fixers (AI post-edit + commit) ----
     {
-        id = "agents-claude-sync",
-        name = "AGENTS.md / CLAUDE.md in sync",
+        id = "ruff-format",
+        name = "ruff format",
         language = "system",
-        entry = "bash -c 'diff -q AGENTS.md CLAUDE.md || (echo \"AGENTS.md and CLAUDE.md differ — keep them byte-identical\" && exit 1)'",
+        entry = "uv run ruff format",
+        files = { glob = ["**/*.py", "**/*.pyi"] },
+        exclude = { glob = "**/migrations/**" },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    {
+        # Linter with auto-fix: post-edit applies fixes to the edited file,
+        # stop/commit re-fixes the tree and reports what remains.
+        id = "ruff-check",
+        name = "ruff check --fix",
+        language = "system",
+        entry = "uv run ruff check --fix",
+        files = { glob = ["**/*.py", "**/*.pyi"] },
+        exclude = { glob = "**/migrations/**" },
+        groups = ["format", "lint"],
+        stages = ["pre-commit"],
+    },
+    {
+        id = "djlint-reformat",
+        name = "djlint --reformat",
+        language = "system",
+        entry = "uv run djlint --reformat --configuration=pyproject.toml",
+        files = { glob = "**/*.html" },
+        exclude = { glob = ["examples/**", "docs/**"] },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    {
+        id = "django-upgrade",
+        name = "django-upgrade",
+        language = "system",
+        entry = "uv run django-upgrade --target-version 5.2",
+        files = { glob = ["**/*.py", "**/*.pyi"] },
+        exclude = { glob = "**/migrations/**" },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    {
+        id = "pyproject-fmt",
+        name = "pyproject-fmt",
+        language = "system",
+        entry = "uv run pyproject-fmt",
+        files = { glob = "**/pyproject.toml" },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    {
+        # Auto-fixing sync of the AI config copies (CLAUDE.md and the
+        # .agents/.zcode skills mirrors are generated — never edit them).
+        id = "agents-sync",
+        name = "AI tool configs in sync (AGENTS.md -> CLAUDE.md, skills mirrors)",
+        language = "system",
+        entry = "uv run python scripts/sync_agents.py",
         pass_filenames = false,
-        files = { glob = ["AGENTS.md", "CLAUDE.md"] },
+        files = { glob = ["AGENTS.md", ".claude/skills/**"] },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    # ---- lint group: fast whole-tree checks (AI stop + commit) ----
+    {
+        id = "djlint-lint",
+        name = "djlint --lint",
+        language = "system",
+        entry = "uv run djlint --lint --configuration=pyproject.toml",
+        files = { glob = "**/*.html" },
+        exclude = { glob = ["examples/**", "docs/**"] },
+        groups = ["lint"],
+        stages = ["pre-commit"],
+    },
+    # ---- check group: slower verification gates (AI stop + commit + CI) ----
+    {
+        id = "mypy",
+        name = "mypy (tree_comments)",
+        language = "system",
+        entry = "uv run mypy tree_comments",
+        pass_filenames = false,
+        files = { glob = ["tree_comments/**", "pyproject.toml", "tests/settings.py"] },
+        groups = ["check"],
+        stages = ["pre-commit"],
+    },
+    {
+        id = "uv-lock-check",
+        name = "uv.lock up to date",
+        language = "system",
+        entry = "uv lock --check",
+        pass_filenames = false,
+        files = { glob = ["pyproject.toml", "uv.lock"] },
+        groups = ["check"],
+        stages = ["pre-commit"],
+    },
+    {
+        id = "migrations-drift",
+        name = "migrations up to date",
+        language = "system",
+        entry = "uv run python scripts/check_migrations.py",
+        pass_filenames = false,
+        files = { glob = ["tree_comments/**", "tests/app/models.py"] },
+        groups = ["check"],
+        stages = ["pre-commit"],
     },
     {
         # tree_comments/__init__.py __version__ is the single source of truth
@@ -90,8 +166,19 @@ hooks = [
         id = "version-pep440",
         name = "tree_comments __version__ is a valid PEP 440 version",
         language = "system",
-        entry = "python scripts/check_version.py",
+        entry = "uv run python scripts/check_version.py",
         pass_filenames = false,
         files = { glob = ["tree_comments/__init__.py", "scripts/check_version.py"] },
+        groups = ["check"],
+        stages = ["pre-commit"],
+    },
+    # ---- commit-msg: Conventional Commits ----
+    {
+        id = "conventional-commits",
+        name = "commit message format",
+        language = "system",
+        entry = "uv run python scripts/check_commit_msg.py",
+        pass_filenames = true,
+        stages = ["commit-msg"],
     },
 ]

@@ -44,11 +44,14 @@ urls.Repository = "https://github.com/jukanntenn/django-tree-comments"
 [dependency-groups]
 dev = [
   "django-stubs[compatible-mypy]>=6.0.7",
+  "django-upgrade>=1.31.1",
   "djlint>=1.42.3",
   "factory-boy>=3.3.1",
   "mypy>=2.3",
   "mysqlclient>=2.2.7",
+  "prek>=0.4.4",
   "psycopg[binary]>=3.2.13",
+  "pyproject-fmt>=2.25.3",
   "pytest>=8.3.5",
   "pytest-benchmark>=4",
   "pytest-cov>=5",
@@ -134,6 +137,12 @@ lint.ignore = [
   "RUF043",
 ]
 lint.per-file-ignores."**/settings.py" = [ "S105" ]
+# AI hook adapters are subprocess dispatchers by design: they shell out to
+# `uv run prek ...`, and the partial "uv" path (resolved from PATH) is
+# intentional so the hooks work across machines.
+lint.per-file-ignores.".claude/hooks/**" = [ "S603", "S607" ]
+lint.per-file-ignores.".codex/hooks/**" = [ "S603", "S607" ]
+lint.per-file-ignores.".zcode/hooks/**" = [ "S603", "S607" ]
 lint.per-file-ignores."examples/**" = [
   "B007",
   "C901",

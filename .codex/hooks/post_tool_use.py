@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-
+# Codex PostToolUse (apply_patch): delegate formatting to prek (the format
+# group — the single source of truth). No formatter logic lives here, so this
+# adapter can never drift from prek/CI. Only the apply_patch text parsing is
+# Codex-specific.
 from __future__ import annotations
 
 import json
 import subprocess
 import sys
-from pathlib import PurePath
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
 
 MOVE_TO_PREFIX = "*** Move to: "
 PATCH_FILE_PREFIXES = (
@@ -17,8 +22,8 @@ PATCH_FILE_PREFIXES = (
 def extract_edited_paths(command: str) -> list[str]:
     paths: list[str] = []
     pending_update: str | None = None
-    for raw in command.splitlines():
-        line = raw.strip()
+    for raw_line in command.splitlines():
+        line = raw_line.strip()
         if pending_update is not None and line.startswith(MOVE_TO_PREFIX):
             paths.append(line[len(MOVE_TO_PREFIX) :].strip())
             pending_update = None
@@ -37,17 +42,6 @@ def extract_edited_paths(command: str) -> list[str]:
     return paths
 
 
-def commands_for(path: PurePath) -> list[list[str]]:
-    match path.suffix:
-        case ".py" | ".pyi":
-            return [
-                ["uv", "run", "ruff", "check", "--fix", str(path)],
-                ["uv", "run", "ruff", "format", str(path)],
-            ]
-        case _:
-            return []
-
-
 def main() -> None:
     try:
         payload = json.loads(sys.stdin.read())
@@ -58,19 +52,29 @@ def main() -> None:
     if not isinstance(command, str):
         return
 
-    for raw_path in extract_edited_paths(command):
-        for cmd in commands_for(PurePath(raw_path)):
-            try:
-                result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
-            except FileNotFoundError:
-                print(f"[codex-post-tool-use] uv not found on PATH; skipped {cmd[3]}", file=sys.stderr)
-                continue
-            if result.returncode != 0:
-                print(f"[codex-post-tool-use] {cmd[3]} reported issues for {raw_path}:", file=sys.stderr)
-                if result.stdout:
-                    print(result.stdout, file=sys.stderr)
-                if result.stderr:
-                    print(result.stderr, file=sys.stderr)
+    paths = [p for p in extract_edited_paths(command) if (ROOT / p).is_file()]
+    if not paths:
+        return
+
+    try:
+        r = subprocess.run(
+            ["uv", "run", "prek", "run", "--group", "format", "--files", *paths],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        print("[codex-post-tool-use] uv not found on PATH; skipped formatting", file=sys.stderr)
+        return
+    # exit 0 = clean, 1 = fixers modified files (expected for a formatter);
+    # surface only real errors.
+    if r.returncode not in (0, 1):
+        print(f"[codex-post-tool-use] prek format exited {r.returncode}:", file=sys.stderr)
+        if r.stdout:
+            print(r.stdout, file=sys.stderr)
+        if r.stderr:
+            print(r.stderr, file=sys.stderr)
 
 
 if __name__ == "__main__":

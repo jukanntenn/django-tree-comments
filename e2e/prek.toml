@@ -1,0 +1,50 @@
+# e2e project — Node/TypeScript hooks that must run with cwd=e2e/ (where
+# package.json lives). Discovered via prek workspace mode from the root
+# prek.toml; path prefixes are stripped so per-file formatting works with
+# `prek run --group format --files e2e/tests/x.spec.ts` from the repo root.
+#
+# Hooks skip gracefully when e2e/node_modules is missing (run `cd e2e && npm ci`)
+# — CI installs deps and enforces them for real.
+
+[[repos]]
+repo = "local"
+hooks = [
+    # ---- format group: per-file formatter (AI post-edit + commit) ----
+    {
+        id = "prettier",
+        name = "prettier (e2e)",
+        language = "system",
+        entry = "test -d node_modules || { echo 'e2e/node_modules missing — run: cd e2e && npm ci (skipping prettier)'; exit 0; }; exec npm exec --no -- prettier --write \"$@\"",
+        shell = "bash",
+        files = { glob = ["**/*.ts", "**/*.js", "**/*.css", "**/*.json"] },
+        exclude = { glob = "package-lock.json" },
+        groups = ["format"],
+        stages = ["pre-commit"],
+    },
+    # ---- check group: typecheck (AI stop + commit + CI) ----
+    {
+        # Playwright runs tests through esbuild, which does not typecheck —
+        # without this gate type errors ship silently.
+        id = "e2e-typecheck",
+        name = "tsc --noEmit (e2e)",
+        language = "system",
+        entry = "test -d node_modules || { echo 'e2e/node_modules missing — run: cd e2e && npm ci (skipping tsc)'; exit 0; }; npm exec --no -- tsc --noEmit",
+        shell = "bash",
+        files = { glob = ["**/*.ts", "tsconfig.json"] },
+        pass_filenames = false,
+        groups = ["check"],
+        stages = ["pre-commit"],
+    },
+    {
+        # npm ci refuses to run when package.json and package-lock.json are
+        # out of sync; --dry-run keeps it a pure check.
+        id = "npm-lock-check",
+        name = "e2e package-lock.json up to date",
+        language = "system",
+        entry = "npm ci --dry-run --no-audit --no-fund",
+        files = { glob = ["package.json", "package-lock.json"] },
+        pass_filenames = false,
+        groups = ["check"],
+        stages = ["pre-commit"],
+    },
+]

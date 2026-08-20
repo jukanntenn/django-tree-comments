@@ -1,22 +1,15 @@
 #!/usr/bin/env python3
-
+# Claude PostToolUse (Edit|Write): delegate formatting to prek (the format
+# group — the single source of truth). No formatter logic lives here, so this
+# adapter can never drift from prek/CI.
 from __future__ import annotations
 
 import json
 import subprocess
 import sys
-from pathlib import PurePath
+from pathlib import Path
 
-
-def commands_for(path: PurePath) -> list[list[str]]:
-    match path.suffix:
-        case ".py" | ".pyi":
-            return [
-                ["uv", "run", "ruff", "check", "--fix", str(path)],
-                ["uv", "run", "ruff", "format", str(path)],
-            ]
-        case _:
-            return []
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def main() -> None:
@@ -26,21 +19,28 @@ def main() -> None:
         return
 
     file_path = (payload.get("tool_input") or {}).get("file_path")
-    if not isinstance(file_path, str):
+    if not isinstance(file_path, str) or not (Path(file_path).is_file() or (ROOT / file_path).is_file()):
         return
 
-    for cmd in commands_for(PurePath(file_path)):
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
-        except FileNotFoundError:
-            print(f"[post-tool-use] uv not found on PATH; skipped {cmd[3]}", file=sys.stderr)
-            continue
-        if result.returncode != 0:
-            print(f"[post-tool-use] {cmd[3]} reported issues for {file_path}:", file=sys.stderr)
-            if result.stdout:
-                print(result.stdout, file=sys.stderr)
-            if result.stderr:
-                print(result.stderr, file=sys.stderr)
+    try:
+        r = subprocess.run(
+            ["uv", "run", "prek", "run", "--group", "format", "--files", file_path],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        print("[post-tool-use] uv not found on PATH; skipped formatting", file=sys.stderr)
+        return
+    # exit 0 = clean, 1 = fixers modified files (expected for a formatter);
+    # surface only real errors.
+    if r.returncode not in (0, 1):
+        print(f"[post-tool-use] prek format exited {r.returncode}:", file=sys.stderr)
+        if r.stdout:
+            print(r.stdout, file=sys.stderr)
+        if r.stderr:
+            print(r.stderr, file=sys.stderr)
 
 
 if __name__ == "__main__":
